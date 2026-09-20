@@ -1,0 +1,16 @@
+* text=auto
+
+*.css linguist-vendored
+*.scss linguist-vendored
+*.svg linguist-vendored
+*.png linguist-vendored
+*.jpg linguist-vendored
+
+.github/ linguist-vendored
+public/ linguist-vendored
+
+*.[jJ][sS] text eol=lf
+*.[tT][sS] text eol=lf
+*.[tT][sS][xX] text eol=lf
+*.json text eol=lf
+*.md text eol=lf

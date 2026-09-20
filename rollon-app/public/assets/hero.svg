@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="360" viewBox="0 0 1200 360">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#0ea5a4"/>
+    </linearGradient>
+    <style>
+      .title { font: 700 48px 'Inter', sans-serif; fill: white; }
+      .subtitle { font: 400 20px 'Inter', sans-serif; fill: rgba(255,255,255,0.85); }
+    </style>
+  </defs>
+  <rect width="1200" height="360" fill="url(#g)" />
+  <g transform="translate(60,80)">
+    <text class="title">RollON — Premium E‑Commerce</text>
+    <text class="subtitle" y="60">Fast, accessible storefront — shop live at rollon-delta.vercel.app</text>
+  </g>
+</svg>

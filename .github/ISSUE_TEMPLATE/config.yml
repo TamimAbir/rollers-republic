@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: RollON Documentation
+    url: https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/blob/main/README.md
+    about: Start here — overview, quick start, and template guide
+  - name: API Contract
+    url: https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/blob/main/docs/API.md
+    about: Backend integration spec for products, orders, and auth
+  - name: Security Policy
+    url: https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/blob/main/SECURITY.md
+    about: Report vulnerabilities privately — do not open a public issue

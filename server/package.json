@@ -1,0 +1,20 @@
+{
+  "name": "rollon-reference-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Zero-dependency reference API server for the RollON storefront (docs/API.md contract)",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node --test",
+    "generate:seed": "node scripts/generate-seed.mjs",
+    "check:seed": "node scripts/check-seed-sync.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

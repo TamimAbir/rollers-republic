@@ -1,0 +1,251 @@
+{
+  "categories": [
+    {
+      "id": "1",
+      "name": "Vaporizers",
+      "slug": "vaporizers",
+      "description": "Premium vaping experience with our curated collection",
+      "image": "/images/categories/vaporizers.jpg",
+      "icon": "Zap",
+      "productCount": 0,
+      "gradient": "from-blue-500 to-purple-600"
+    },
+    {
+      "id": "2",
+      "name": "Grinders",
+      "slug": "grinders",
+      "description": "Precision grinding tools for the perfect consistency",
+      "image": "/images/categories/grinders.jpg",
+      "icon": "CircleDot",
+      "productCount": 1,
+      "gradient": "from-purple-500 to-pink-500"
+    },
+    {
+      "id": "3",
+      "name": "Water Pipes",
+      "slug": "water-pipes",
+      "description": "Smooth filtration for a refined experience",
+      "image": "/images/categories/vaporizers.jpg",
+      "icon": "Droplets",
+      "productCount": 3,
+      "gradient": "from-cyan-500 to-blue-500"
+    },
+    {
+      "id": "4",
+      "name": "Rolling Papers",
+      "slug": "rolling-papers",
+      "description": "Classic collection of premium papers",
+      "image": "/images/categories/papers.jpg",
+      "icon": "Scroll",
+      "productCount": 1,
+      "gradient": "from-amber-500 to-orange-500"
+    },
+    {
+      "id": "5",
+      "name": "Lighters",
+      "slug": "lighters",
+      "description": "Reliable ignition tools for every need",
+      "image": "/images/categories/lighters.jpg",
+      "icon": "Flame",
+      "productCount": 0,
+      "gradient": "from-red-500 to-orange-500"
+    },
+    {
+      "id": "6",
+      "name": "Accessories",
+      "slug": "accessories",
+      "description": "Essential extras to complete your setup",
+      "image": "/images/categories/accessories.jpg",
+      "icon": "Package",
+      "productCount": 1,
+      "gradient": "from-emerald-500 to-teal-500"
+    }
+  ],
+  "products": [
+    {
+      "id": "richer-kingslim",
+      "name": "Richer Rolling Quality Kingslim Size",
+      "slug": "richer-kingslim-papers",
+      "description": "Premium, elegant gold-foiled rolling papers. Kingslim size for a superior experience. Features a sleek black design with gold accents indicating the ultimate rolling quality.",
+      "price": 350,
+      "originalPrice": 450,
+      "image": "/images/products/richer-papers.png",
+      "category": "Rolling Papers",
+      "categoryId": "4",
+      "tags": [
+        "kingslim",
+        "premium",
+        "papers",
+        "gold-foil"
+      ],
+      "stock": 150,
+      "inStock": true,
+      "rating": 5,
+      "reviewCount": 42,
+      "specifications": {
+        "Size": "Kingslim",
+        "Material": "Premium unbleached paper",
+        "Packaging": "Black w/ Gold Foil"
+      },
+      "featured": true,
+      "new": true
+    },
+    {
+      "id": "hb109-silicon",
+      "name": "HB109 Hot Silicon Bong",
+      "slug": "hb109-hot-silicon-bong",
+      "description": "5-inch compact silicon bong with heat-resistant properties. Features a honeycomb texture and comes in various trippy color patterns including Green/Pink and Blue/Pink swirls. Perfect for convenient, durable use.",
+      "price": 1850,
+      "originalPrice": 2200,
+      "image": "/images/products/hb109-silicon.png",
+      "category": "Water Pipes",
+      "categoryId": "3",
+      "tags": [
+        "silicon",
+        "heat-resistant",
+        "compact",
+        "trippy"
+      ],
+      "stock": 20,
+      "inStock": true,
+      "rating": 4.9,
+      "reviewCount": 12,
+      "specifications": {
+        "Material": "Food-grade Silicone",
+        "Height": "5 inch",
+        "Pattern": "Honeycomb",
+        "Colors": "Multi-color Swirl"
+      },
+      "featured": true,
+      "new": true
+    },
+    {
+      "id": "cherry-pipe-8inch",
+      "name": "8-inch Cherry Pattern Water Pipe",
+      "slug": "cherry-pattern-glass-pipe-8inch",
+      "description": "Elegant 8-inch glass water pipe with a clean white base decorated with red cherry graphics. Comes with a high-quality glass stem and 14mm bowl for smooth, clean hits.",
+      "price": 3200,
+      "image": "/images/products/cherry-pipe.png",
+      "category": "Water Pipes",
+      "categoryId": "3",
+      "tags": [
+        "glass",
+        "cherry",
+        "water pipe",
+        "premium"
+      ],
+      "stock": 15,
+      "inStock": true,
+      "rating": 4.8,
+      "reviewCount": 8,
+      "specifications": {
+        "Material": "Borosilicate Glass",
+        "Height": "8 inch",
+        "Bowl Size": "14mm",
+        "Design": "Cherry Graphic"
+      },
+      "featured": true
+    },
+    {
+      "id": "clear-beaker-10inch",
+      "name": "10-inch Clear Beaker Water Pipe",
+      "slug": "clear-beaker-bong-10inch",
+      "description": "Classic clear glass beaker bong for smooth filtration. Includes a 14mm diffuser downstem and bowl for high-quality hits. The design prioritizes purity and cooling.",
+      "price": 4500,
+      "image": "/images/products/clear-beaker.png",
+      "category": "Water Pipes",
+      "categoryId": "3",
+      "tags": [
+        "glass",
+        "beaker",
+        "filtration",
+        "smooth"
+      ],
+      "stock": 10,
+      "inStock": true,
+      "rating": 4.9,
+      "reviewCount": 15,
+      "specifications": {
+        "Material": "Thick Glass",
+        "Height": "10 inch",
+        "Base": "Beaker",
+        "Downstem": "Diffused"
+      },
+      "featured": true
+    },
+    {
+      "id": "wooden-grinder-3rd-gen",
+      "name": "3rd Gen Wooden Grinder",
+      "slug": "wooden-grinder-3rd-gen",
+      "description": "Premium light wood exterior with sharp metal teeth inside for efficient and smooth grinding of dry herbs. High-quality construction that combines natural aesthetics with industrial performance.",
+      "price": 1500,
+      "image": "/images/products/wooden-grinder.png",
+      "category": "Grinders",
+      "categoryId": "2",
+      "tags": [
+        "grinder",
+        "wood",
+        "3-piece",
+        "natural"
+      ],
+      "stock": 25,
+      "inStock": true,
+      "rating": 4.7,
+      "reviewCount": 22,
+      "specifications": {
+        "Exterior": "Natural Wood",
+        "Teeth": "Metal",
+        "Type": "3-Piece",
+        "Grip": "Ergonomic"
+      },
+      "featured": true
+    },
+    {
+      "id": "rick-morty-tray",
+      "name": "Rick and Morty Rolling Tray",
+      "slug": "rick-and-morty-metal-tray",
+      "description": "Durable metal rolling tray featuring high-detail, trippy Rick and Morty artwork. Perfect for organizing rolling accessories and keeping your setup clean.",
+      "price": 1200,
+      "image": "/images/products/rick-morty-tray.png",
+      "category": "Accessories",
+      "categoryId": "6",
+      "tags": [
+        "tray",
+        "metal",
+        "rick and morty",
+        "pop art"
+      ],
+      "stock": 30,
+      "inStock": true,
+      "rating": 4.8,
+      "reviewCount": 30,
+      "specifications": {
+        "Material": "Metal",
+        "Artwork": "Rick and Morty",
+        "Style": "Durable Finish",
+        "Size": "Standard"
+      },
+      "featured": true
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "1",
+      "name": "Rahman Ahmed",
+      "rating": 5,
+      "quote": "Amazing quality products! The wooden grinder I ordered exceeded my expectations. Fast delivery across Dhaka."
+    },
+    {
+      "id": "2",
+      "name": "Sarah Khan",
+      "rating": 5,
+      "quote": "Best smoking accessories shop in Bangladesh. Love the variety and the prices are reasonable. The glass pieces are artistically made."
+    },
+    {
+      "id": "3",
+      "name": "Imran Hossain",
+      "rating": 4,
+      "quote": "Great experience shopping here. The bKash payment was smooth and I got my order quickly. Highly recommend the silicon bongs."
+    }
+  ]
+}
