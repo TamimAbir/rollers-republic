@@ -1,7 +1,7 @@
-# RollON Development Guidelines
+# Rollers Republic Development Guidelines
 
 ## Project Overview
-- **Repository**: RollON e-commerce storefront (React 19, TypeScript, Vite, Tailwind CSS, Framer Motion, React Router v7)
+- **Repository**: Rollers Republic storefront (React 19, TypeScript, Vite, Tailwind CSS, Framer Motion, React Router v7)
 - **Backend**: Reference API server in `server/` (zero-dependency Node, implements `docs/API.md`)
 - **Testing**: Vitest unit (106 tests) + Playwright E2E (storeflow, accessibility) + node:test server integration (23 tests)
 
@@ -9,14 +9,14 @@
 
 ### Local Development
 ```bash
-cd rollon-app
+cd app
 npm ci
 npm run dev
 ```
 
 ### Quality Gates (Required before commit)
 ```bash
-cd rollon-app
+cd app
 npm run lint     # ESLint — zero errors required
 npm test -- --run  # Vitest — 115 tests required
 npm run test:coverage  # Coverage thresholds: 84/75/80/84 (stmts/branch/funcs/lines)
@@ -27,7 +27,7 @@ npm run test:e2e:degraded  # Degraded-mode: remote API down → banner + fallbac
 # If the reference API server changed:
 cd ../server
 npm test         # 23 integration tests
-npm run check:seed  # seed.json must match rollon-app/src/data/products.ts
+npm run check:seed  # seed.json must match app/src/data/products.ts
 ```
 
 ## Definition of Done (MANDATORY before declaring any task complete)
@@ -75,14 +75,15 @@ This policy exists because a past session deleted two app components while
 keeping 11 primitives + 10 hooks with contradictory reasoning. Write the rule
 down; apply it uniformly.
 
-## Current Status (August 2026)
-- **Version**: 1.0.0-beta.1
-- **Tests**: 115 unit (Vitest) + 21 E2E (Playwright: storeflow + a11y) + 2 degraded-mode E2E + 23 server integration (node:test) + 4 seed-injection tests
+## Current Status (September 2026)
+- **Version**: 1.0.0 (Rollers Republic — see docs/SSOT.md before working on this repo)
+- **Tests**: 120 unit (Vitest, incl. AgeGate) + E2E (Playwright: storeflow + a11y on 13 routes) + 2 degraded-mode E2E + 28 server integration (node:test) + 4 seed-injection tests
 - **Coverage**: ~88% statements (thresholds: 84/75/80/84)
 - **Lint**: 0 errors
 - **Build**: Passing
-- **Accessibility**: automated axe-core WCAG 2.1 AA scan in E2E suite (10 routes)
+- **Accessibility**: automated axe-core WCAG 2.1 AA scan in E2E suite (13 routes)
 - **Production API**: reference API deployed as Vercel serverless function (`api/rollon.js`, `/api/*` rewrite); live site talks to real backend same-origin
+- **Catalog**: 949 real products / 8 categories / 82 brands seeded from the client's WooCommerce Store API — regenerate via `app/scripts/fetch-catalog.mjs`, keep seed.json in sync (`npm run check:seed`)
 
 ## Accessibility Requirements
 
@@ -113,8 +114,8 @@ All code changes must comply with WCAG 2.1 AA standards:
 
 ### Configuration
 - `vercel.json` in root handles deployment
-- Build: `cd rollon-app && npm run build`
-- Output: `rollon-app/dist`
+- Build: `cd app && npm run build`
+- Output: `app/dist`
 - **IMPORTANT**: Always include SPA rewrites for React Router:
 ```json
 {
@@ -225,7 +226,7 @@ skill superpowers/test-driven-development
 
 ## File Organization
 ```
-rollon-app/
+app/
 ├── src/
 │   ├── components/
 │   │   ├── layout/    # Navbar, Footer, ProtectedRoute

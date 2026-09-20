@@ -1,14 +1,15 @@
 {
-  "name": "rollon",
-  "version": "1.0.0-beta.1",
+  "name": "rollers-republic",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "engines": {
     "node": ">=20.10.0"
   },
-  "description": "RollON — config-driven e-commerce template. Reference API lives in /server, Vercel serverless entrypoint in /api.",
+  "description": "Rollers Republic — config-driven e-commerce storefront for rollerspub.com. Reference API lives in /server, Vercel serverless entrypoint in /api.",
   "scripts": {
-    "build": "cd rollon-app && npm run build",
-    "test:server": "cd server && npm test"
+    "build": "cd app && npm run build",
+    "test:server": "cd server && npm test",
+    "check:seed": "node server/scripts/check-seed-sync.mjs"
   }
 }

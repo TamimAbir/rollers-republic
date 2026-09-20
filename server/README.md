@@ -30,7 +30,7 @@ npm test
 Point the storefront at this server instead of bundled mock data:
 
 ```bash
-cd ../rollon-app
+cd ../app
 VITE_USE_REMOTE_API=true VITE_API_BASE_URL=http://localhost:8787 npm run dev
 ```
 
@@ -45,7 +45,7 @@ npm run dev
 You can also run the full E2E suite against the real API:
 
 ```bash
-cd ../rollon-app
+cd ../app
 npx playwright test --config=playwright.remote.config.ts
 ```
 
@@ -76,7 +76,7 @@ npx playwright test --config=playwright.remote.config.ts
 
 The repo ships a ready-made Vercel function at [`api/rollon.js`](../api/rollon.js).
 `vercel.json` rewrites `/api/*` → the function, and production builds of the
-storefront default to `VITE_USE_REMOTE_API=true` (see `rollon-app/.env.production`),
+storefront default to `VITE_USE_REMOTE_API=true` (see `app/.env.production`),
 so **the live site talks to this real API at the same origin** — no CORS, no
 separate host.
 

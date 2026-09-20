@@ -69,15 +69,15 @@ describe('RollON Reference API', () => {
     });
 
     test('GET /products?search= filters results', async () => {
-      const { body } = await get('/products?search=grinder');
+      const { body } = await get('/products?search=raw%20classic%20paper%20tin%20box');
       assert.ok(body.length >= 1);
-      assert.ok(body.every((p) => p.name.toLowerCase().includes('grinder')));
+      assert.ok(body.some((p) => p.slug === 'raw-classic-paper-tin-box'));
     });
 
     test('GET /products?slug= resolves a single product', async () => {
-      const { body } = await get('/products?slug=wooden-grinder-3rd-gen');
+      const { body } = await get('/products?slug=raw-classic-paper-tin-box');
       assert.equal(body.length, 1);
-      assert.equal(body[0].name, '3rd Gen Wooden Grinder');
+      assert.equal(body[0].name, 'Raw Classic Paper Tin Box');
     });
 
     test('GET /products?featured=true returns only featured', async () => {
@@ -89,7 +89,14 @@ describe('RollON Reference API', () => {
     test('GET /categories returns seeded categories', async () => {
       const { body } = await get('/categories');
       assert.ok(Array.isArray(body));
-      assert.ok(body.some((c) => c.slug === 'grinders'));
+      assert.ok(body.some((c) => c.slug === 'rolling-papers'));
+    });
+
+    test('GET /brands returns seeded brands', async () => {
+      const { body } = await get('/brands');
+      assert.ok(Array.isArray(body));
+      assert.ok(body.length > 0);
+      assert.ok(body.every((b) => b.id && b.name && b.slug));
     });
 
     test('GET /payment/methods returns cod/bkash/nagad', async () => {

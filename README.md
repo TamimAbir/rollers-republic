@@ -1,109 +1,80 @@
-# RollON-MVP-Final-V1 🛒
+# Rollers Republic — Smoking Headshop Storefront
 
-**Production e-commerce platform with cart, variants, checkout, and admin dashboard.**  
-React 19 + TypeScript + Tailwind + Zustand. 117 tests, 87% coverage, CI green, WCAG 2.1 AA.
+[![CI](https://img.shields.io/badge/CI-typecheck%20·%20lint%20·%20test%20·%20build-2ECC71)]() [![a11y](https://img.shields.io/badge/WCAG-2.1%20AA-D4AF37)]() [![Tests](https://img.shields.io/badge/tests-148%20passing-2ECC71)]()
 
-- **Live:** https://rollon-delta.vercel.app  
-- **Repo:** [FahadIbrahim93/RollON-MVP-Final-V1](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1)  
-- **Stack:** React 19 · TypeScript · Tailwind · Zustand · Playwright  
-- **Quality:** 117 tests (106 unit + 11 Playwright E2E), 87% coverage, CI green
+Production e-commerce storefront for **Rollers Republic** (rollerspub.com) — Bangladesh's
+pioneering headshop since 2013. Rolling papers, blunts, filter tips, waterpipes & bongs,
+vapes and munchies, imported from the UK with same-day Dhaka delivery.
 
-<div align="center">
+> **For AI coders:** read [`docs/SSOT.md`](docs/SSOT.md) **first**. It is the single source
+> of truth for business facts, design system, data pipeline, and the Definition of Done.
 
-![RollON](https://img.shields.io/badge/RollON-MVP_Ready-blue?style=for-the-badge)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
-[![React 19](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-%7E5.9-3178C6?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Tailwind CSS 4](https://img.shields.io/badge/Tailwind_CSS-4-38B2AC?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
-[![CI](https://img.shields.io/github/actions/workflow/status/FahadIbrahim93/RollON-MVP-Final-V1/ci.yml?style=for-the-badge&label=CI&logo=github)](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/actions)
-[![Tests: 117](https://img.shields.io/badge/Tests-117-2ECC71?style=for-the-badge)](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/actions)
-[![Coverage: 87%](https://img.shields.io/badge/Coverage-87%25-2ECC71?style=for-the-badge)](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/actions)
+## What's inside
 
-</div>
+- **Complete storefront** — catalog (949 real SKUs), brand & category filtering, search,
+  cart, checkout (bKash / Cash on Delivery), order confirmation
+- **Real catalog pipeline** — `app/scripts/fetch-catalog.mjs` snapshots the client's live
+  WooCommerce Store API into `app/src/data/products.ts` (the one data file) and `server/seed.json`
+- **18+ AgeGate** — mandatory, persisted, WCAG-compliant (SSOT §9)
+- **Config-driven branding** — every business value lives in `app/src/lib/config.ts`
+- **Reference API** — zero-dependency Node server (`server/`) deployed as a Vercel
+  serverless function (`api/rollon.js`); frontend degrades gracefully to bundled data
+- **Dark-gold design system** — RollON heritage × RR amber pub ramp (SSOT §5)
 
----
+## Stack
 
-## What it is
-
-RollON is a configurable e-commerce platform designed for real transactions, not portfolio demos. It ships with a complete storefront, admin dashboard, and hardened security defaults—ready to clone, rebrand, and deploy.
-
-- **Complete storefront** — Product catalog, cart, checkout, and order confirmation
-- **Config-driven branding** — Customize business identity, colors, and content via a single config file
-- **Fully responsive** — Mobile-first design that works on all devices
-- **Blazing fast** — Vite build, code splitting, lazy loading
-- **Dark theme** — Modern dark UI with Tailwind CSS v4
-- **SEO optimized** — Meta tags, Open Graph, structured data, semantic HTML
-- **Accessible** — WCAG 2.1 AA compliant, keyboard navigation, ARIA labels
-- **Type-safe** — Full TypeScript coverage with strict mode
-- **Modular architecture** — Reusable components, Zustand state management
-- **Secure** — CSP headers, env validation, no hardcoded secrets
-
----
-
-## Tech highlights
-
-| Area | Implementation |
-|---|---|
-| **Frontend** | React 19, TypeScript strict mode, Tailwind CSS 4, Vite |
-| **State** | Zustand for cart, auth, and UI state |
-| **Routing** | React Router with protected admin routes |
-| **Testing** | Vitest (106 unit) + Playwright (11 E2E), 87% coverage |
-| **CI/CD** | GitHub Actions, Vercel deploy, quality gates |
-| **Accessibility** | WCAG 2.1 AA, a11y testing in CI |
-| **Config-driven** | Centralized config for branding, features, and deployment targets |
-
----
-
-## Quality metrics
-
-- **117 automated tests** — 106 unit + 11 Playwright E2E
-- **87% coverage** — Enforced coverage thresholds in CI
-- **CI green** — typecheck → lint → test → build → deploy
-- **WCAG 2.1 AA** — Accessible by design, not afterthought
-- **CSP-hardened** — Content Security Policy enforced
-
----
+React 19 · TypeScript (strict) · Vite 7 · Tailwind CSS 4 · Zustand · React Router 7 ·
+TanStack Query · Vitest + Playwright (+ axe-core) · Node 20+ reference API · Vercel
 
 ## Getting started
 
 ```bash
-git clone https://github.com/FahadIbrahim93/RollON-MVP-Final-V1.git
-cd RollON-MVP-Final-V1/rollon-app
-npm install
-npm run dev
+git clone <this-repo>
+cd rollers-republic/app
+npm ci
+npm run dev            # http://localhost:5173
 ```
+
+## Quality gates (Definition of Done — SSOT §10)
 
 ```bash
-npm run typecheck          # TypeScript check
-npm run lint               # ESLint
-npm test                   # Unit tests
-npm run test:e2e           # Playwright E2E
-npm run ci                 # Full pipeline
+cd app
+npm run lint            # zero errors
+npm test -- --run       # unit tests
+npm run test:coverage   # thresholds: 84/75/80/84 (stmts/branch/funcs/lines)
+npm run build           # tsc + vite
+npm run test:e2e        # Playwright storeflow + axe-core a11y
+npm run test:e2e:degraded
+
+cd ../server
+npm test                # 28 API integration tests
+cd .. && npm run check:seed   # seed.json ↔ products.ts sync gate
 ```
 
----
+## Catalog refresh
 
-## Architecture
+```bash
+cd app
+node scripts/fetch-catalog.mjs     # snapshot from rollerspub.com Woo Store API
+cd ..
+node server/scripts/generate-seed.mjs
+npm run check:seed
+```
 
-- **Components** — Reusable UI primitives with Tailwind
-- **Pages** — Route-based pages for shop, cart, checkout, admin
-- **Stores** — Zustand stores for cart, auth, products
-- **Config** — Centralized config for branding, features, deployment targets
-- **E2E** — Playwright tests for critical user flows
+## Project structure
 
----
+```
+app/                 React storefront (formerly rollon-app in the template)
+  src/data/          products.ts — THE catalog single source of truth
+  src/lib/config.ts  ALL business configuration (SSOT §8)
+  scripts/           fetch-catalog.mjs — Woo Store API snapshot
+server/              Zero-dependency Node reference API
+api/                 Vercel serverless wrapper
+docs/                SSOT.md, API.md, ARCHITECTURE.md, PITCH.md
+```
 
-## Why this repo stands out
+## Credits & license
 
-1. **Production-ready** — Not a tutorial project, built for real transactions
-2. **Test coverage** — 87% with both unit and E2E tests
-3. **Accessibility** — WCAG 2.1 AA in an e-commerce context
-4. **Config-driven** — Easy to rebrand and deploy for different clients
-5. **AI-assisted delivery** — Built with multi-agent workflow, quality gates maintained
-
----
-
-## Contributing
-
-See [CONTRIBUTING.md](./CONTRIBUTING.md) for setup and PR guidelines.  
-See [AGENTS.md](./AGENTS.md) for AI coding standards and architecture rules.
+Seeded from [`FahadIbrahim93/RollON-MVP-Final-V1`](https://github.com/FahadIbrahim93/RollON-MVP-Final-V1)
+(MIT) by Fahad Ibrahim. Product data & imagery © Rollers Republic — used here as a
+proposal demo only.

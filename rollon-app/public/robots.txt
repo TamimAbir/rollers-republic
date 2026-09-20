@@ -1,9 +1,0 @@
-User-agent: *
-Allow: /
-
-# Account pages are user-specific; keep them out of search results
-Disallow: /account/
-Disallow: /success/
-
-# Sitemap location
-Sitemap: https://rollon-delta.vercel.app/sitemap.xml

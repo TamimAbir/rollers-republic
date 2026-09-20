@@ -27,7 +27,7 @@ function loadSeed() {
     const raw = readFileSync(path.join(__dirname, 'seed.json'), 'utf8');
     return JSON.parse(raw);
   } catch {
-    return { categories: [], products: [], testimonials: [] };
+    return { categories: [], products: [], testimonials: [], brands: [] };
   }
 }
 
@@ -38,6 +38,7 @@ const db = {
   categories: [...seed.categories],
   products: [...seed.products],
   testimonials: [...seed.testimonials],
+  brands: [...(seed.brands ?? [])],
   orders: [],
   customers: [],
   users: [], // { id, name, email, passwordHash, role, avatar }
@@ -293,6 +294,20 @@ async function handleRequest(req, res) {
     return sendJson(res, 200, category);
   }
 
+  /* -------- Brands -------- */
+  if (pathname === '/brands' && method === 'GET') {
+    let items = [...db.brands];
+    if (query.id) items = items.filter((b) => b.id === query.id);
+    if (query.slug) items = items.filter((b) => b.slug === query.slug);
+    return sendJson(res, 200, listResponse(items));
+  }
+  if (pathname.startsWith('/brands/') && method === 'GET') {
+    const id = decodeURIComponent(pathname.split('/')[2]);
+    const brand = db.brands.find((b) => b.id === id || b.slug === id);
+    if (!brand) return sendError(res, 404, 'Brand not found');
+    return sendJson(res, 200, brand);
+  }
+
   /* -------- Orders -------- */
   if (pathname === '/orders' && method === 'GET') {
     const user = requireAuth(req, res);
@@ -382,6 +397,7 @@ function createAppServer({ seed: seedOverride } = {}) {
     db.categories = [...seedOverride.categories];
     db.products = [...seedOverride.products];
     db.testimonials = [...seedOverride.testimonials];
+    db.brands = [...(seedOverride.brands ?? [])];
   }
   return createServer((req, res) => {
     handleRequest(req, res).catch((err) => {

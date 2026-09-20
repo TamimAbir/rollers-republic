@@ -8,7 +8,7 @@
 
 ## Reporting a Vulnerability
 
-We take the security of RollON seriously. If you discover a security vulnerability, please follow these steps:
+We take the security of Rollers Republic seriously. If you discover a security vulnerability, please follow these steps:
 
 1. **Do NOT** open a public GitHub issue
 2. Email your findings to: FahadIbrahim93@gmail.com

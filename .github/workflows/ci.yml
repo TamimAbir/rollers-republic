@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./rollon-app
+        working-directory: ./app
     steps:
       - uses: actions/checkout@v4
 
@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'npm'
-          cache-dependency-path: rollon-app/package-lock.json
+          cache-dependency-path: app/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./rollon-app
+        working-directory: ./app
     steps:
       - uses: actions/checkout@v4
 
@@ -50,7 +50,7 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'npm'
-          cache-dependency-path: rollon-app/package-lock.json
+          cache-dependency-path: app/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -62,14 +62,14 @@ jobs:
         run: npx playwright test
 
       - name: Run degraded-mode E2E (remote API down)
-        working-directory: ./rollon-app
+        working-directory: ./app
         run: npm run test:e2e:degraded
 
   dependency-audit:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./rollon-app
+        working-directory: ./app
     steps:
       - uses: actions/checkout@v4
 
@@ -78,7 +78,7 @@ jobs:
         with:
           node-version: '20.x'
           cache: 'npm'
-          cache-dependency-path: rollon-app/package-lock.json
+          cache-dependency-path: app/package-lock.json
 
       - name: Install dependencies
         run: npm ci

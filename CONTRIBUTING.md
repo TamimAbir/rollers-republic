@@ -1,6 +1,6 @@
-# Contributing to RollON
+# Contributing to Rollers Republic
 
-Thank you for your interest in contributing to RollON! This document provides guidelines and instructions for contributing.
+Thank you for your interest in contributing to Rollers Republic! This document provides guidelines and instructions for contributing.
 
 ## Code of Conduct
 
@@ -28,7 +28,7 @@ Before creating bug reports, please check existing issues. When creating a bug r
 ### Pull Requests
 
 1. Fork the repository and create your branch from `main`
-2. Install dependencies: `cd rollon-app && npm install`
+2. Install dependencies: `cd app && npm install`
 3. Make your changes
 4. Run quality gates before submitting:
    ```bash
@@ -45,7 +45,7 @@ Before creating bug reports, please check existing issues. When creating a bug r
 ```bash
 # Clone and setup
 git clone https://github.com/FahadIbrahim93/RollON-MVP-Final-V1.git
-cd RollON-MVP-Final-V1/rollon-app
+cd RollON-MVP-Final-V1/app
 npm install
 
 # Start development

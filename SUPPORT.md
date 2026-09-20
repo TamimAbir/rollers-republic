@@ -1,6 +1,6 @@
 # Support
 
-Need help with RollON? Here's how to get support.
+Need help with Rollers Republic? Here's how to get support.
 
 ## Documentation
 

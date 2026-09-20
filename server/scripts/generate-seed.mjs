@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
  * Generates server/seed.json from the frontend's canonical data source
- * (rollon-app/src/data/products.ts).
+ * (app/src/data/products.ts).
  *
  * The data file is the single source of truth (AGENTS.md: no duplicate data).
- * This script transpiles it with esbuild (already available in rollon-app's
+ * This script transpiles it with esbuild (already available in app's
  * node_modules), imports the exports, and writes a plain JSON snapshot that the
  * reference API server can load without TypeScript tooling.
  *
@@ -22,7 +22,7 @@ import { createRequire } from 'node:module';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const serverDir = path.resolve(__dirname, '..');
 const rootDir = path.resolve(serverDir, '..');
-const appDir = path.join(rootDir, 'rollon-app');
+const appDir = path.join(rootDir, 'app');
 const dataFile = path.join(appDir, 'src', 'data', 'products.ts');
 const outFile = path.join(serverDir, '.seed-build.mjs');
 
@@ -32,7 +32,7 @@ let esbuildPath;
 try {
   esbuildPath = require.resolve('esbuild'); // server/node_modules
 } catch {
-  esbuildPath = require.resolve('esbuild', { paths: [appDir] }); // rollon-app/node_modules
+  esbuildPath = require.resolve('esbuild', { paths: [appDir] }); // app/node_modules
 }
 const esbuild = require(esbuildPath);
 
@@ -52,15 +52,15 @@ try {
 
 // 2. Import the transpiled module and snapshot its exports.
 const mod = await import(new URL(`file://${outFile.replaceAll('\\', '/')}`).href);
-const { categories, products, testimonials } = mod;
+const { categories, products, testimonials, brands } = mod;
 
 if (!Array.isArray(products) || !Array.isArray(categories)) {
-  console.error('Unexpected exports in data file. Expected categories[], products[], testimonials[].');
+  console.error('Unexpected exports in data file. Expected categories[], products[], testimonials[], brands[].');
   process.exit(1);
 }
 
 // 3. Write the seed snapshot.
-const seed = { categories, products, testimonials };
+const seed = { categories, products, testimonials, brands: brands ?? [] };
 mkdirSync(serverDir, { recursive: true });
 writeFileSync(path.join(serverDir, 'seed.json'), JSON.stringify(seed, null, 2) + '\n');
 
@@ -70,5 +70,5 @@ try {
 } catch { /* non-fatal */ }
 
 console.log(
-  `seed.json written: ${categories.length} categories, ${products.length} products, ${testimonials.length} testimonials`,
+  `seed.json written: ${categories.length} categories, ${products.length} products, ${(brands ?? []).length} brands, ${testimonials.length} testimonials`,
 );

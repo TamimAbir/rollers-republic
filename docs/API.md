@@ -1,6 +1,6 @@
-# RollON API Contract
+# Rollers Republic API Contract
 
-This document defines the HTTP API that the RollON storefront expects. It is the
+This document defines the HTTP API that the Rollers Republic storefront expects. It is the
 single source of truth for backend implementers — any backend (Supabase, Node,
 serverless functions, etc.) that conforms to this contract will work with the
 frontend with zero code changes.
@@ -165,7 +165,7 @@ The API layer (`src/lib/api.ts`) wraps every call:
 **Shipped and live.** The repo includes [`api/rollon.js`](../api/rollon.js): a
 single catch-all function that wraps the zero-dependency reference server and
 serves the full contract at `/api/*`. `vercel.json` rewrites `/api/(.*)` →
-`/api/rollon`, and `rollon-app/.env.production` sets `VITE_USE_REMOTE_API=true`
+`/api/rollon`, and `app/.env.production` sets `VITE_USE_REMOTE_API=true`
 so production builds hit it same-origin (CSP's `connect-src 'self'` allows it).
 
 The live demo (`rollon-delta.vercel.app`) uses this exact path.
