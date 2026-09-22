@@ -11,7 +11,7 @@ const PRECACHE_URLS = [
   '/index.html',
   '/site.webmanifest',
   '/favicon.svg',
-  '/images/og-image.svg',
+  '/images/og-image.png',
 ];
 
 // Install: pre-cache core shell

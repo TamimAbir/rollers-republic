@@ -1,8 +1,31 @@
 @import "tailwindcss";
 
+/*
+ * Metric-compatible fallbacks (SEO-AUDIT fix #1): while the self-hosted variable
+ * fonts load, these size-adjusted system faces reserve the same space, so text
+ * does not reflow when the real font arrives → zero CLS from font swapping.
+ * Metrics via next/font tooling: Inter→Arial, Montserrat→Verdana.
+ */
+@font-face {
+  font-family: 'Inter Fallback';
+  src: local('Arial');
+  size-adjust: 107.12%;
+  ascent-override: 90.20%;
+  descent-override: 22.48%;
+  line-gap-override: 0%;
+}
+@font-face {
+  font-family: 'Montserrat Fallback';
+  src: local('Verdana');
+  size-adjust: 100.06%;
+  ascent-override: 95.36%;
+  descent-override: 23.84%;
+  line-gap-override: 0%;
+}
+
 @theme {
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-display: 'Montserrat', system-ui, sans-serif;
+  --font-sans: 'Inter Variable', 'Inter Fallback', Arial, system-ui, sans-serif;
+  --font-display: 'Montserrat Variable', 'Montserrat Fallback', Verdana, system-ui, sans-serif;
 
   --color-background: hsl(var(--background));
   --color-foreground: hsl(var(--foreground));

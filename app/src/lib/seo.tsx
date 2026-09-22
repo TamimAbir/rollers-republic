@@ -71,11 +71,18 @@ export function useDocumentSEO({
   title,
   description,
   canonicalPath,
-  image = import.meta.env.VITE_SITE_URL + '/images/og-image.jpg',
+  image,
   keywords = 'smoking accessories, grinders, vaporizers, rolling papers, lighters, Bangladesh, online shop',
   type = 'website',
   jsonLd,
 }: SEOConfig) {
+  // SEO-AUDIT fix #2: default to the raster brand card (SVG is not renderable
+  // by Facebook/WhatsApp link previews) and sanitize SVG product images for
+  // the same reason.
+  const DEFAULT_OG_IMAGE = '/images/og-image.png';
+  const ogImage =
+    image && !/\.svg(\?|$)/i.test(image) ? image : DEFAULT_OG_IMAGE;
+
   useEffect(() => {
     const canonicalUrl = `${SITE_URL}${canonicalPath}`;
     const schemaId = 'rr-jsonld';
@@ -87,12 +94,12 @@ export function useDocumentSEO({
     upsertMetaTag('meta[property="og:title"]', { property: 'og:title', content: `${title} | ${siteConfig.name}` });
     upsertMetaTag('meta[property="og:description"]', { property: 'og:description', content: description });
     upsertMetaTag('meta[property="og:url"]', { property: 'og:url', content: canonicalUrl });
-    upsertMetaTag('meta[property="og:image"]', { property: 'og:image', content: toAbsoluteUrl(image) });
+    upsertMetaTag('meta[property="og:image"]', { property: 'og:image', content: toAbsoluteUrl(ogImage) });
     upsertMetaTag('meta[property="og:type"]', { property: 'og:type', content: type });
     upsertMetaTag('meta[name="twitter:card"]', { name: 'twitter:card', content: 'summary_large_image' });
     upsertMetaTag('meta[name="twitter:title"]', { name: 'twitter:title', content: `${title} | ${siteConfig.name}` });
     upsertMetaTag('meta[name="twitter:description"]', { name: 'twitter:description', content: description });
-    upsertMetaTag('meta[name="twitter:image"]', { name: 'twitter:image', content: toAbsoluteUrl(image) });
+    upsertMetaTag('meta[name="twitter:image"]', { name: 'twitter:image', content: toAbsoluteUrl(ogImage) });
     upsertLinkTag('link[rel="canonical"]', canonicalUrl);
 
     const currentSchema = document.getElementById(schemaId);
@@ -111,5 +118,5 @@ export function useDocumentSEO({
     return () => {
       document.getElementById(schemaId)?.remove();
     };
-  }, [canonicalPath, description, image, jsonLd, keywords, title, type]);
+  }, [canonicalPath, description, ogImage, jsonLd, keywords, title, type]);
 }

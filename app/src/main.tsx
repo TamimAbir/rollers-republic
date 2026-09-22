@@ -3,6 +3,11 @@ import ReactDOM from 'react-dom/client'
 import { BrowserRouter } from 'react-router-dom'
 import * as Sentry from '@sentry/react'
 import App from './App'
+// Self-hosted variable fonts (SEO-AUDIT fix #1: zero layout shift, no Google Fonts)
+import '@fontsource-variable/inter/wght.css'
+import '@fontsource-variable/inter/wght-italic.css'
+import '@fontsource-variable/montserrat/wght.css'
+import '@fontsource-variable/montserrat/wght-italic.css'
 import './index.css'
 import { QueryProvider } from './lib/queryProvider'
 
