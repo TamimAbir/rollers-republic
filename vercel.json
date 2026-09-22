@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "name": "rollers-republic",
-  "buildCommand": "cd app && npm run build",
+  "buildCommand": "cd app && npx playwright install chromium && npm run build",
   "outputDirectory": "app/dist",
   "framework": "vite",
   "installCommand": "cd app && npm ci",
