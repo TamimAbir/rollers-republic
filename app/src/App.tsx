@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Navbar } from '@/components/layout/Navbar';
+import { ScrollToTop } from '@/components/layout/ScrollToTop';
 import { AgeGate } from '@/components/layout/AgeGate';
 import { DegradedModeBanner } from '@/components/layout/DegradedModeBanner';
 import { CartDrawer } from '@/components/CartDrawer';
@@ -36,6 +37,7 @@ const AgePolicy = React.lazy(() => import('@/pages/Legal').then(m => ({ default:
 function App() {
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      <ScrollToTop />
       <AgeGate />
       <Navbar />
       <DegradedModeBanner />
