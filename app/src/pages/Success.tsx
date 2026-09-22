@@ -6,8 +6,16 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { useCartStore } from '@/store/cartStore';
 import { toast } from 'sonner';
+import { useDocumentSEO } from '@/lib/seo';
 
 export default function Success() {
+  useDocumentSEO({
+    title: 'Order Confirmed',
+    description: 'Your Rollers Republic order has been confirmed.',
+    canonicalPath: '/success',
+    noindex: true,
+  });
+
     const [searchParams] = useSearchParams();
     // Order ID comes from the checkout flow via the URL query param.
     // Fall back to a fixed placeholder (avoid impure Date.now() during render).

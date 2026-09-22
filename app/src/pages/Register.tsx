@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Footer } from '@/components/layout/Footer';
 import { useAuthStore } from '@/store';
+import { useDocumentSEO } from '@/lib/seo';
 import { toast } from 'sonner';
 
 const registerSchema = z.object({
@@ -22,6 +23,12 @@ const registerSchema = z.object({
 type RegisterForm = z.infer<typeof registerSchema>;
 
 export function Register() {
+  useDocumentSEO({
+    title: 'Create Account',
+    description: 'Create your Rollers Republic account for faster checkout and order history.',
+    canonicalPath: '/register',
+    noindex: true,
+  });
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const registerUser = useAuthStore((state) => state.register);

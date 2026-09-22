@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { Footer } from '@/components/layout/Footer';
 import { useAuthStore } from '@/store';
+import { useDocumentSEO } from '@/lib/seo';
 import { toast } from 'sonner';
 
 const loginSchema = z.object({
@@ -21,6 +22,12 @@ export function Login() {
   const navigate = useNavigate();
   const location = useLocation();
   const login = useAuthStore((state) => state.login);
+  useDocumentSEO({
+    title: 'Log In',
+    description: 'Log in to your Rollers Republic account.',
+    canonicalPath: '/login',
+    noindex: true,
+  });
 
   const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),

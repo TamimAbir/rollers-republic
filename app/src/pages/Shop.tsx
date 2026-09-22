@@ -15,6 +15,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ProductSkeleton } from '@/components/ui/ProductSkeleton';
 import { ShopProductCard } from '@/components/shop/shop-product-card';
+import { useDocumentSEO } from '@/lib/seo';
 
 
 export function Shop() {
@@ -101,6 +102,25 @@ export function Shop() {
     { label: 'Price: High to Low', value: 'price-high' },
     { label: 'Best Rating', value: 'rating' },
   ];
+
+  // SEO-AUDIT fix #3: brand/category-aware titles + canonicals so filtered
+  // views are individually indexable (e.g. "Shop RAW ... in Dhaka").
+  const selectedCategoryName = categories.find((c) => c.slug === selectedCategory)?.name;
+  const seoTitleParts = [
+    selectedBrand?.name,
+    selectedCategoryName ?? 'Shop All Products',
+  ].filter(Boolean) as string[];
+  const seoQuery = selectedBrandSlug || selectedCategoryId
+    ? `${seoTitleParts.join(' ')} in Dhaka`
+    : 'Rolling Papers, Bongs & Vapes in Dhaka';
+  useDocumentSEO({
+    title: `Shop ${seoQuery}`,
+    description: `Browse ${selectedBrand?.name ?? 'our'} authentic ${(
+      selectedCategoryName ?? 'rolling papers, blunts, waterpipes, vapes and accessories'
+    ).toLowerCase()} imported from the UK. Same-day delivery in Dhaka, prices in ৳.`,
+    canonicalPath: '/shop',
+    keywords: `shop ${selectedBrand?.name ?? 'smoking accessories'} bangladesh, ${seoQuery.toLowerCase()}, online headshop dhaka`,
+  });
 
   return (
     <main className="min-h-screen bg-[#050505] pt-24">

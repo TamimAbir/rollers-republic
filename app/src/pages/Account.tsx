@@ -1,11 +1,18 @@
 import { motion } from 'framer-motion';
 import { User, Mail, Shield, Package, MapPin, CreditCard, LogOut, ChevronRight, Camera } from 'lucide-react';
 import { useAuthStore } from '@/store/authStore';
+import { useDocumentSEO } from '@/lib/seo';
 import { Footer } from '@/components/layout/Footer';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 
 export function Account() {
+  useDocumentSEO({
+    title: 'My Account',
+    description: 'Manage your Rollers Republic account.',
+    canonicalPath: '/account',
+    noindex: true,
+  });
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
 

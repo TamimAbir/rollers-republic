@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Mail, MapPin, Send, Clock, MessageCircle } from 'lucide-react';
 import { Footer } from '@/components/layout/Footer';
 import { siteConfig } from '@/lib/config';
+import { useDocumentSEO } from '@/lib/seo';
 
 const WHATSAPP_NUMBER = siteConfig.social.whatsapp?.split('/').pop() ?? '';
 
@@ -32,6 +33,14 @@ const contactInfo = [
 ];
 
 export function Contact() {
+  useDocumentSEO({
+    title: 'Contact & Outlets · Dhanmondi + Mirpur, Dhaka',
+    description:
+      'Visit the Dhanmondi flagship (Plaza A.R, Shop 108) or Mirpur outlet, call 01330005300, or message us on WhatsApp. Open 7 days for same-day delivery across Dhaka.',
+    canonicalPath: '/contact',
+    keywords: 'rollers republic contact, headshop dhanmondi address, smoke shop mirpur, 01330005300, whatsapp order bangladesh',
+  });
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',

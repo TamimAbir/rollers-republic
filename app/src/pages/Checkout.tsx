@@ -11,6 +11,7 @@ import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCartStore } from '@/store/cartStore';
 import { useAuthStore } from '@/store/authStore';
+import { useDocumentSEO } from '@/lib/seo';
 import { formatPrice, cn } from '@/lib/utils';
 import { checkoutSchema, type CheckoutForm } from '@/lib/checkoutSchema';
 import { Footer } from '@/components/layout/Footer';
@@ -27,6 +28,12 @@ import { toast } from 'sonner';
 export function Checkout() {
   const items = useCartStore((state) => state.items);
   const totalPrice = useCartStore((state) => state.totalPrice);
+  useDocumentSEO({
+    title: 'Checkout',
+    description: 'Complete your order — bKash or Cash on Delivery, same-day Dhaka delivery.',
+    canonicalPath: '/checkout',
+    noindex: true,
+  });
   const clearCart = useCartStore((state) => state.clearCart);
   const [step, setStep] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);

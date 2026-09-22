@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Home, ArrowLeft } from 'lucide-react';
+import { useDocumentSEO } from '@/lib/seo';
 import { Button } from '@/components/ui/button';
 
 const PARTICLES = [
@@ -26,6 +27,13 @@ const PARTICLES = [
 ];
 
 export function NotFound() {
+  useDocumentSEO({
+    title: 'Page Not Found',
+    description: 'The page you are looking for does not exist.',
+    canonicalPath: '/404',
+    noindex: true,
+  });
+
   return (
     <div className="min-h-[80vh] flex flex-col items-center justify-center relative overflow-hidden">
       {/* Ambient Background Effects */}

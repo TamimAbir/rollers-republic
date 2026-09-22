@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { Award, Store, MapPin, ShieldCheck } from 'lucide-react';
 import { Footer } from '@/components/layout/Footer';
+import { useDocumentSEO } from '@/lib/seo';
 
 const stats = [
   { icon: Award, value: '2013', label: 'Established in Dhaka' },
@@ -33,6 +34,14 @@ const values = [
 ];
 
 export function About() {
+  useDocumentSEO({
+    title: 'Our Story · Bangladesh\u2019s Pioneering Headshop Since 2013',
+    description:
+      'From a single shop in Dhanmondi to Bangladesh\u2019s most trusted headshop. Two outlets, 82 imported brands, one standard: 100% authentic, every time.',
+    canonicalPath: '/about',
+    keywords: 'rollers republic story, headshop dhaka history, dhanmondi smoke shop, mirpur headshop, about rollers republic',
+  });
+
   return (
     <main className="min-h-screen bg-[#0a0a0a]">
       {/* Hero */}

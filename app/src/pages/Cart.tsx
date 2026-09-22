@@ -4,8 +4,16 @@ import { ShoppingBag, Plus, Minus, Trash2, ArrowRight, Truck } from 'lucide-reac
 import { useCartStore } from '@/store/cartStore';
 import { formatPrice } from '@/lib/utils';
 import { Footer } from '@/components/layout/Footer';
+import { useDocumentSEO } from '@/lib/seo';
 
 export function Cart() {
+  useDocumentSEO({
+    title: 'Your Cart',
+    description: 'Review your items and proceed to checkout.',
+    canonicalPath: '/cart',
+    noindex: true,
+  });
+
   const items = useCartStore((state) => state.items);
   const removeItem = useCartStore((state) => state.removeItem);
   const updateQuantity = useCartStore((state) => state.updateQuantity);

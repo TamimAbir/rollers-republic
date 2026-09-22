@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { Footer } from '@/components/layout/Footer';
 import { siteConfig, ageNotice } from '@/lib/config';
+import { useDocumentSEO } from '@/lib/seo';
 
 function LegalShell({ title, accent, children }: { title: string; accent: string; children: React.ReactNode }) {
   return (
@@ -33,6 +34,11 @@ function Section({ heading, children }: { heading: string; children: React.React
 }
 
 export function Terms() {
+  useDocumentSEO({
+    title: 'Terms of Service',
+    description: `Terms of service for ordering from ${siteConfig.name} — 18+ policy, delivery terms, returns.`,
+    canonicalPath: '/terms',
+  });
   return (
     <LegalShell title="Terms of" accent="Service">
       <p>Last updated: September 2026. By using {siteConfig.name}&apos;s website, you agree to these terms.</p>
@@ -69,6 +75,11 @@ export function Terms() {
 }
 
 export function Privacy() {
+  useDocumentSEO({
+    title: 'Privacy Policy',
+    description: `How ${siteConfig.name} collects, uses, and protects your data.`,
+    canonicalPath: '/privacy',
+  });
   return (
     <LegalShell title="Privacy" accent="Policy">
       <p>Last updated: September 2026. Your privacy matters to us.</p>
@@ -98,6 +109,11 @@ export function Privacy() {
 }
 
 export function AgePolicy() {
+  useDocumentSEO({
+    title: 'Age Policy · 18+ Only',
+    description: `${siteConfig.name} sells tobacco accessories to adults aged 18 and over. Age verification on entry and at delivery.`,
+    canonicalPath: '/age-policy',
+  });
   return (
     <LegalShell title="Age" accent="Policy">
       <p className="text-white/80 font-medium">{ageNotice}</p>

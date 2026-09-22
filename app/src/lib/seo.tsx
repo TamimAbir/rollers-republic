@@ -10,6 +10,8 @@ interface SEOConfig {
   keywords?: string;
   type?: 'website' | 'product';
   jsonLd?: Record<string, unknown>;
+  /** Exclude the page from search indexes (cart, checkout, account, etc.). */
+  noindex?: boolean;
 }
 
 const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://rollerspub.com';
@@ -75,6 +77,7 @@ export function useDocumentSEO({
   keywords = 'smoking accessories, grinders, vaporizers, rolling papers, lighters, Bangladesh, online shop',
   type = 'website',
   jsonLd,
+  noindex = false,
 }: SEOConfig) {
   // SEO-AUDIT fix #2: default to the raster brand card (SVG is not renderable
   // by Facebook/WhatsApp link previews) and sanitize SVG product images for
@@ -91,6 +94,12 @@ export function useDocumentSEO({
 
     upsertMetaTag('meta[name="description"]', { name: 'description', content: description });
     upsertMetaTag('meta[name="keywords"]', { name: 'keywords', content: keywords });
+    upsertMetaTag(
+      'meta[name="robots"]',
+      noindex
+        ? { name: 'robots', content: 'noindex, nofollow' }
+        : { name: 'robots', content: 'index, follow' },
+    );
     upsertMetaTag('meta[property="og:title"]', { property: 'og:title', content: `${title} | ${siteConfig.name}` });
     upsertMetaTag('meta[property="og:description"]', { property: 'og:description', content: description });
     upsertMetaTag('meta[property="og:url"]', { property: 'og:url', content: canonicalUrl });
@@ -118,5 +127,5 @@ export function useDocumentSEO({
     return () => {
       document.getElementById(schemaId)?.remove();
     };
-  }, [canonicalPath, description, ogImage, jsonLd, keywords, title, type]);
+  }, [canonicalPath, description, ogImage, jsonLd, keywords, title, type, noindex]);
 }
