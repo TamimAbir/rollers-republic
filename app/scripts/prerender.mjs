@@ -151,7 +151,12 @@ const { chromium } = require('playwright');
 /** Launch chromium, auto-installing it once if the binary is missing. */
 async function launchBrowser() {
   try {
-    return await chromium.launch();
+    return await chromium.launch({
+      // CI containers (Vercel build image) run as non-root without the SUID
+      // sandbox — launching with it kills the browser instantly.
+      chromiumSandbox: false,
+      args: ['--no-sandbox', '--disable-dev-shm-usage', '--disable-gpu'],
+    });
   } catch (err) {
     // On Vercel the binary may be absent AND system deps always are — don't
     // waste build minutes downloading a browser that can't launch there.
