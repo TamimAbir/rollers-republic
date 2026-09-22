@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import type { Product } from '@/types';
-import { siteConfig } from '@/lib/config';
+import { siteConfig, brandConfig } from '@/lib/config';
 
 interface SEOConfig {
   title: string;
@@ -46,6 +46,61 @@ const toAbsoluteUrl = (pathOrUrl: string) => {
 
   return `${SITE_URL}${pathOrUrl.startsWith('/') ? '' : '/'}${pathOrUrl}`;
 };
+
+/**
+ * LocalBusiness JSON-LD (SEO-AUDIT fix #5): both physical outlets, both phone
+ * numbers, Facebook profile, founding year. Built from siteConfig so the
+ * rebrand contract (SSOT §8) stays intact — update config.ts, not this file.
+ */
+export const buildLocalBusinessJsonLd = (): Record<string, unknown> => ({
+  '@context': 'https://schema.org',
+  '@type': 'Store',
+  '@id': `${SITE_URL}/#business`,
+  name: siteConfig.name,
+  description: siteConfig.description,
+  url: SITE_URL,
+  logo: toAbsoluteUrl(brandConfig.favicon),
+  image: toAbsoluteUrl('/images/og-image.png'),
+  telephone: `+88${siteConfig.phone}`,
+  email: siteConfig.email,
+  foundingDate: '2013',
+  slogan: siteConfig.tagline,
+  sameAs: [siteConfig.social.facebook, siteConfig.social.whatsapp].filter(Boolean),
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Plaza A.R, Dhanmondi-28, Ground floor, Shop 108',
+    addressLocality: 'Dhaka',
+    postalCode: '1207',
+    addressCountry: 'BD',
+  },
+  location: siteConfig.outlets.map((outlet) => ({
+    '@type': 'Place',
+    name: `${siteConfig.name} — ${outlet.name}`,
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: outlet.address,
+      addressLocality: 'Dhaka',
+      addressCountry: 'BD',
+    },
+    hasMap: outlet.mapsUrl,
+  })),
+  contactPoint: [
+    siteConfig.phone ? {
+      '@type': 'ContactPoint',
+      telephone: `+88${siteConfig.phone}`,
+      contactType: 'customer service',
+      areaServed: 'BD',
+      availableLanguage: ['en', 'bn'],
+    } : null,
+    siteConfig.phoneAlt ? {
+      '@type': 'ContactPoint',
+      telephone: `+88${siteConfig.phoneAlt}`,
+      contactType: 'sales',
+      areaServed: 'BD',
+      availableLanguage: ['en', 'bn'],
+    } : null,
+  ].filter(Boolean),
+});
 
 export const buildProductJsonLd = (product: Product, canonicalPath: string): Record<string, unknown> => ({
   '@context': 'https://schema.org',
@@ -124,8 +179,23 @@ export function useDocumentSEO({
       currentSchema.remove();
     }
 
+    // Sitewide LocalBusiness schema (SEO-AUDIT fix #5) — lives on every page,
+    // in its own script tag so it never clobbers a page's Product schema.
+    const businessId = 'rr-jsonld-business';
+    const currentBusiness = document.getElementById(businessId);
+    const businessScript = currentBusiness || document.createElement('script');
+    businessScript.id = businessId;
+    businessScript.setAttribute('type', 'application/ld+json');
+    businessScript.textContent = JSON.stringify(buildLocalBusinessJsonLd());
+    if (!currentBusiness) {
+      document.head.appendChild(businessScript);
+    }
+
     return () => {
       document.getElementById(schemaId)?.remove();
+      // Business schema is recreated on the next page's SEO effect — remove
+      // it here only on unmount, where React clears the whole tree.
+      document.getElementById(businessId)?.remove();
     };
   }, [canonicalPath, description, ogImage, jsonLd, keywords, title, type, noindex]);
 }
