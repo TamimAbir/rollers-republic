@@ -236,6 +236,7 @@ primitives + `useApi.ts` contract.
 | **M3** | Pages & sections per §6 (home, shop+brand filter, PDP, commerce, about, contact+outlets, legal, 404) | ✅ done |
 | **M4** | Tests & CI green per §10; E2E adapted; coverage held (120 unit + 24 E2E + 2 degraded + 28 server) | ✅ done |
 | **M5** | Deploy-ready: vercel.json rewrites+CSP, SEO files, PITCH.md — **remaining:** push to GitHub, connect Vercel, Lighthouse pass on live URL | 🔄 needs deploy |
+| **M6** | SEO/perf hardening: self-hosted fonts, OG PNG, per-page SEO + 574-URL sitemap, LocalBusiness JSON-LD, build-time prerender of 484 routes (§ docs/SEO-AUDIT.md) | ✅ done |
 
 **Agent working agreement:** one milestone per PR-series; update the status column and
 CHANGELOG in the same commit as the work; never mark ⏳→✅ without the §10 gates passing.

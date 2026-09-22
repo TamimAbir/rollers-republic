@@ -11,6 +11,11 @@ export default defineConfig({
     tailwindcss(),
   ],
   build: {
+    // One shared CSS file instead of per-chunk styles. With code splitting on,
+    // the sonner toast stylesheet (14 KB, imported by 30+ lazy chunks) used to
+    // be re-inlined into the prerendered HTML once per chunk — ~450 KB of
+    // duplicate <style> tags on every page. Single bundle: <style> once.
+    cssCodeSplit: false,
     rollupOptions: {
       output: {
         manualChunks: {

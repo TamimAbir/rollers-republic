@@ -3,6 +3,21 @@
 All notable changes to this project are documented here. Format based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Added
+- **Build-time prerendering** — `npm run build` now renders all 484 sitemap
+  routes (every in-stock PDP + key pages) to static HTML, so bots, social
+  scrapers, and no-JS clients receive fully-populated pages with per-page
+  titles and JSON-LD (`app/scripts/prerender.mjs`; `SKIP_PRERENDER=1` opts
+  out; soft-skips on Vercel when chromium is unavailable so deploys never
+  break).
+
+### Changed
+- **`cssCodeSplit: false`** — one shared CSS bundle instead of per-chunk
+  inline styles. Eliminates ~450 KB of duplicated toast/vendor CSS that the
+  prerender captured on every page (home 606 KB → 155 KB; dist 247 MB → 54 MB).
+
 ## [1.0.0] — 2026-09-20
 
 First release of the **Rollers Republic** storefront, built on the RollON template
