@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Report a bug to help us improve RollON
+about: Report a bug to help us improve Rollers Republic
 title: "[Bug] "
 labels: bug
 assignees: ''
@@ -26,7 +26,7 @@ If applicable, add screenshots or paste any browser console errors.
 - Device: [e.g. iPhone 15, Desktop]
 - Browser: [e.g. Chrome 131, Safari 18]
 - Node version: [e.g. 20.11.0]
-- Deployment: [e.g. local dev, rollon-delta.vercel.app]
+- Deployment: [e.g. local dev, rollers-republic.vercel.app]
 
 **Additional context**
 Add any other context about the problem here.

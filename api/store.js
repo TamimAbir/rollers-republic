@@ -1,8 +1,8 @@
 /**
- * RollON Reference API — Vercel serverless function.
+ * Rollers Republic Reference API — Vercel serverless function.
  *
  * Vercel routes every /api/* request here via the vercel.json rewrite
- * { source: "/api/(.*)", destination: "/api/rollon" }. The rewrite preserves
+ * { source: "/api/(.*)", destination: "/api/store" }. The rewrite preserves
  * the ORIGINAL request URL, so this wrapper strips the /api prefix before
  * re-emitting the request onto the zero-dependency http.Server from
  * server/index.js.

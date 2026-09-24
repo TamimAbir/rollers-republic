@@ -6,7 +6,7 @@
   "framework": "vite",
   "installCommand": "cd app && npm ci",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/rollon" },
+    { "source": "/api/(.*)", "destination": "/api/store" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [

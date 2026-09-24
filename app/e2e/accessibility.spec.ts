@@ -32,8 +32,44 @@ const PAGES = [
 
 async function scanPage(page, path) {
   await page.goto(path, { waitUntil: 'networkidle' });
-  // Give lazy-loaded sections a beat to render.
-  await page.waitForTimeout(500);
+  // /shop: seed-grid hydration races the scan — the 5 async-injected product
+  // skeletons (text-white/40) are what axe samples otherwise. Real pages render
+  // 12 cards; >8 product links means hydrated content, not skeletons.
+  if (path === '/shop') {
+    await page
+      .waitForFunction(
+        () => document.querySelectorAll('main a[href^="/product/"]').length > 8,
+        { timeout: 15_000 },
+      )
+      .catch(() => {
+        throw new Error('shop grid never hydrated before the axe scan');
+      });
+  }
+  // Framer-motion entrance fades + lazy section mounts race the axe sample:
+  // text captured mid-fade reports phantom contrast failures (white composited
+  // at partial opacity ≈ 1.5–4:1). Wait for quiescence: main's HTML stable and
+  // every inline-opacity element (framer-motion's signature) fully settled
+  // across THREE consecutive samples, so late mounts can't slip through.
+  // Elements resting at opacity 0 (below-fold whileInView) are skipped by axe
+  // itself, so they don't block the wait; CSS keyframe pulses (animate-pulse)
+  // don't touch inline styles, so they don't either.
+  const deadline = Date.now() + 20_000;
+  let stableSamples = 0;
+  let lastHtml = -1;
+  while (Date.now() < deadline && stableSamples < 3) {
+    const { html, settled } = await page.evaluate(() => ({
+      html: document.querySelector('main')?.innerHTML.length ?? 0,
+      settled: [...document.querySelectorAll('main [style*="opacity"]')].every(
+        (el) => {
+          const op = parseFloat((el as HTMLElement).style.opacity);
+          return op === 0 || op >= 0.99;
+        },
+      ),
+    }));
+    stableSamples = settled && html === lastHtml && html > 0 ? stableSamples + 1 : 0;
+    lastHtml = html;
+    await page.waitForTimeout(400);
+  }
 
   const results = await new AxeBuilder({ page })
     .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
@@ -43,6 +79,11 @@ async function scanPage(page, path) {
 }
 
 test.describe('Accessibility (axe-core, WCAG 2.1 AA)', () => {
+  // 13 pages scanned against the dev server (which compiles routes on demand)
+  // under full parallelism — the 30s default per-test timeout buckles under
+  // that load even though each scan takes a few seconds in isolation.
+  test.setTimeout(120_000);
+
   for (const { path, name } of PAGES) {
     test(`${name} (${path}) has no serious/critical violations`, async ({ page }) => {
       const results = await scanPage(page, path);

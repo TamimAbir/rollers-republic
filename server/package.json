@@ -1,8 +1,8 @@
 {
-  "name": "rollon-reference-api",
+  "name": "rollers-republic-reference-api",
   "version": "1.0.0",
   "private": true,
-  "description": "Zero-dependency reference API server for the RollON storefront (docs/API.md contract)",
+  "description": "Zero-dependency reference API server for the Rollers Republic storefront (docs/API.md contract)",
   "type": "module",
   "main": "index.js",
   "scripts": {

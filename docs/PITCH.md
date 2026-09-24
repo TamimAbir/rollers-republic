@@ -17,6 +17,10 @@ design that finally matches the quality of what you sell. It's ready to demo tod
 > Deploy link goes here — one Vercel click away. The demo ships with your live catalog
 > snapshot: RAW, Elements, Juicy Jays, OCB, Phoenix, G-RollZ and 76 more brands.
 
+> **Self-contained HTML version:** this proposal also exists as a single shareable file
+> with the buyer-flow screenshots embedded — `docs/pitch.html` (rebuild after UI changes
+> with `node docs/scripts/build-pitch.mjs`, which reads `docs/pitch.template.html`).
+
 ## What you get on day one
 
 | Feature | Detail |

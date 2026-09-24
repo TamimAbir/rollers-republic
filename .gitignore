@@ -52,3 +52,6 @@ test-results/
 .vercel/
 .vercel
 .env*
+
+# Generated pitch deck (rebuild with: node docs/scripts/build-pitch.mjs)
+docs/pitch.html

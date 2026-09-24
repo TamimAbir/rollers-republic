@@ -162,10 +162,10 @@ The API layer (`src/lib/api.ts`) wraps every call:
 
 ## Implementing as Vercel Serverless Functions
 
-**Shipped and live.** The repo includes [`api/rollon.js`](../api/rollon.js): a
+**Shipped and live.** The repo includes [`api/store.js`](../api/store.js): a
 single catch-all function that wraps the zero-dependency reference server and
 serves the full contract at `/api/*`. `vercel.json` rewrites `/api/(.*)` →
-`/api/rollon`, and `app/.env.production` sets `VITE_USE_REMOTE_API=true`
+`/api/store`, and `app/.env.production` sets `VITE_USE_REMOTE_API=true`
 so production builds hit it same-origin (CSP's `connect-src 'self'` allows it).
 
 The live demo (`rollon-delta.vercel.app`) uses this exact path.

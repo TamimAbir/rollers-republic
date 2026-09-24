@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for RollON
+about: Suggest an idea for Rollers Republic
 title: "[Feature] "
 labels: enhancement
 assignees: ''
@@ -16,7 +16,7 @@ A clear and concise description of what you want to happen.
 A clear and concise description of any alternative solutions or features you've considered.
 
 **How would this fit the template?**
-RollON is a configuration-driven e-commerce template. If your feature needs per-business
+Rollers Republic is a production storefront. If your feature needs per-business
 configuration, note where it should plug into `src/lib/config.ts` or the docs in `docs/`.
 
 **Additional context**

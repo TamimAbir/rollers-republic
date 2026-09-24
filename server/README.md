@@ -74,7 +74,7 @@ npx playwright test --config=playwright.remote.config.ts
 
 ### Option 1 — Vercel serverless (already deployed for the live demo)
 
-The repo ships a ready-made Vercel function at [`api/rollon.js`](../api/rollon.js).
+The repo ships a ready-made Vercel function at [`api/store.js`](../api/store.js).
 `vercel.json` rewrites `/api/*` → the function, and production builds of the
 storefront default to `VITE_USE_REMOTE_API=true` (see `app/.env.production`),
 so **the live site talks to this real API at the same origin** — no CORS, no

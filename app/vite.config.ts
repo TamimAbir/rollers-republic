@@ -21,7 +21,7 @@ export default defineConfig({
         manualChunks: {
           'vendor-react': ['react', 'react-dom', 'react-router-dom'],
           'vendor-motion': ['framer-motion'],
-          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-slot', 'lucide-react'],
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-slot', 'lucide-react'],
           'vendor-utils': ['@tanstack/react-query', 'zod', 'zustand', 'clsx', 'tailwind-merge']
         }
       }

@@ -4,7 +4,7 @@ import { request as httpRequest } from 'node:http';
 
 /**
  * Verifies createAppServer({ seed }) — the injection path used by the Vercel
- * serverless wrapper (api/rollon.js). Bundled functions cannot rely on
+ * serverless wrapper (api/store.js). Bundled functions cannot rely on
  * __dirname, so seed data must be injectable directly.
  */
 

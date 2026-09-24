@@ -82,7 +82,8 @@ down; apply it uniformly.
 - **Lint**: 0 errors
 - **Build**: Passing
 - **Accessibility**: automated axe-core WCAG 2.1 AA scan in E2E suite (13 routes)
-- **Production API**: reference API deployed as Vercel serverless function (`api/rollon.js`, `/api/*` rewrite); live site talks to real backend same-origin
+- **SEO/prerender**: 484 routes static-prerendered at build (`npm run build` → `app/scripts/prerender.mjs`); 574-URL sitemap; per-page meta; Product + LocalBusiness JSON-LD
+- **Production API**: reference API deployed as Vercel serverless function (`api/store.js`, `/api/*` rewrite); live site talks to real backend same-origin
 - **Catalog**: 949 real products / 8 categories / 82 brands seeded from the client's WooCommerce Store API — regenerate via `app/scripts/fetch-catalog.mjs`, keep seed.json in sync (`npm run check:seed`)
 
 ## Accessibility Requirements
@@ -191,7 +192,7 @@ export function Component({ title }: Props) {
 
 ### Setting Up Branch Protection
 
-1. Go to: https://github.com/FahadIbrahim93/RollON-MVP-Final-V1/settings/branches
+1. Go to: this repository on GitHub → Settings → Branches
 2. Click "Add branch protection rule"
 3. Set "Branch name pattern" to: `main`
 4. Configure these settings:

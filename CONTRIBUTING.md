@@ -44,8 +44,8 @@ Before creating bug reports, please check existing issues. When creating a bug r
 
 ```bash
 # Clone and setup
-git clone https://github.com/FahadIbrahim93/RollON-MVP-Final-V1.git
-cd RollON-MVP-Final-V1/app
+git clone https://github.com/<your-username>/rollers-republic.git
+cd rollers-republic/app
 npm install
 
 # Start development
