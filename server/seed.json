@@ -7,7 +7,8 @@
       "description": "RAW, Elements, Juicy Jays, OCB — the classics, 100% authentic",
       "icon": "Scroll",
       "gradient": "from-amber-500 to-orange-500",
-      "productCount": 366
+      "productCount": 366,
+      "image": "/images/products/raw-classic-paper-tin-box.jpg"
     },
     {
       "id": "2",
@@ -16,7 +17,8 @@
       "description": "Hemp and tobacco wraps for the slow burn",
       "icon": "Leaf",
       "gradient": "from-amber-600 to-red-500",
-      "productCount": 166
+      "productCount": 166,
+      "image": "/images/products/king-palm-2-mini-rolls-banana-cream.jpg"
     },
     {
       "id": "3",
@@ -25,7 +27,8 @@
       "description": "Perforated, long-fiber, slim — roll it right",
       "icon": "CircleDot",
       "gradient": "from-amber-400 to-amber-700",
-      "productCount": 59
+      "productCount": 59,
+      "image": "/images/products/alien-go-cotton-filter-tips-pack-of-200.png"
     },
     {
       "id": "4",
@@ -34,7 +37,8 @@
       "description": "Hand-picked glass, beakers and bubblers",
       "icon": "Droplets",
       "gradient": "from-amber-500 to-emerald-500",
-      "productCount": 159
+      "productCount": 159,
+      "image": "/images/products/hitten-18-inch-bamboo-shape-heavy-glass-bong.jpeg"
     },
     {
       "id": "5",
@@ -43,7 +47,8 @@
       "description": "Disposables, pods and premium vaporizers",
       "icon": "Zap",
       "gradient": "from-amber-400 to-purple-500",
-      "productCount": 31
+      "productCount": 31,
+      "image": "https://rollerspub.com/wp-content/uploads/2025/09/Black-1-700x700-1.jpg"
     },
     {
       "id": "6",
@@ -52,7 +57,8 @@
       "description": "Sweet and salty, imported straight from the UK",
       "icon": "Cookie",
       "gradient": "from-orange-400 to-pink-500",
-      "productCount": 87
+      "productCount": 87,
+      "image": "/images/products/chewits-strawberry-gums-30g.webp"
     },
     {
       "id": "7",
@@ -61,7 +67,8 @@
       "description": "Grinders, trays, lighters and everything else",
       "icon": "Package",
       "gradient": "from-amber-500 to-teal-500",
-      "productCount": 77
+      "productCount": 77,
+      "image": "/images/products/2-5-inch-4-part-metal-grinder-rick-and-morty-printed.png"
     },
     {
       "id": "8",
@@ -70,7 +77,8 @@
       "description": "Slow and serious",
       "icon": "Flame",
       "gradient": "from-amber-700 to-orange-600",
-      "productCount": 4
+      "productCount": 4,
+      "image": "https://rollerspub.com/wp-content/uploads/2024/10/071610120563.png"
     }
   ],
   "products": [

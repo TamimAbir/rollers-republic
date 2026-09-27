@@ -71,8 +71,17 @@ SHOP <span className="text-white/30 italic">BY</span> <span className="text-prim
                   whileHover={{ y: -8 }}
                   className="group relative h-[450px] rounded-3xl overflow-hidden cursor-pointer bg-[#111] border border-white/5 transition-all duration-500 hover:border-primary/30 shadow-2xl"
                 >
-                  {/* Gradient panel with zoom transition (design-system amber ramp) */}
-                  <div className={cn('absolute inset-0 bg-gradient-to-br opacity-90 transition-all duration-1000 group-hover:scale-105', category.gradient ?? 'from-amber-500 to-orange-600')} />
+                  {/* Photo backdrop; gradient panel sits beneath as the
+                      loading/fallback layer (design-system amber ramp) */}
+                  <div className={cn('absolute inset-0 bg-gradient-to-br', category.gradient ?? 'from-amber-500 to-orange-600')} />
+                  {category.image && (
+                    <img
+                      src={category.image}
+                      alt=""
+                      loading="lazy"
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
+                    />
+                  )}
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.15),transparent_55%)] opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
 
                   {/* Gradient Layers */}
