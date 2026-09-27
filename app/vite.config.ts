@@ -29,6 +29,16 @@ export default defineConfig({
   },
   server: {
     host: '0.0.0.0',
+    proxy: {
+      // Mirror of the prod /img/ proxy (vercel.json): remote product images
+      // are hotlink-blocked by rollerspub.com, so dev needs the same
+      // server-side fetch path.
+      '/img': {
+        target: 'https://rollerspub.com',
+        changeOrigin: true,
+        rewrite: (p) => p.replace(/^\/img\//, '/wp-content/'),
+      },
+    },
   },
   resolve: {
     alias: {

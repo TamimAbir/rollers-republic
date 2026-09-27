@@ -69,11 +69,37 @@ const MIME = {
 };
 
 // ---------- tiny static server with fail-fast /api proxy ----------
+const imgCache = new Map(); // /img/<path> → { body, type } across all renders
 function startStaticServer() {
   const apiBase = `http://127.0.0.1:${API_PORT}`;
   const server = createHttp(async (req, res) => {
     try {
       const u = new URL(req.url, `http://127.0.0.1:${STATIC_PORT}`);
+      if (u.pathname.startsWith('/img/')) {
+        // Mirror of the prod /img/ proxy (vercel.json): fetch remote product
+        // images server-side (no Referer → no hotlink block) so prerendered
+        // pages don't render blank galleries. Shared in-memory cache — the
+        // same images recur across hundreds of routes.
+        try {
+          const key = u.pathname;
+          let hit = imgCache.get(key);
+          if (!hit) {
+            const target = `https://rollerspub.com/wp-content/${u.pathname.replace('/img/', '')}`;
+            const proxied = await fetch(target, { signal: AbortSignal.timeout(10000) });
+            if (!proxied.ok) throw new Error(String(proxied.status));
+            hit = {
+              body: Buffer.from(await proxied.arrayBuffer()),
+              type: proxied.headers.get('content-type') || 'image/jpeg',
+            };
+            imgCache.set(key, hit);
+          }
+          res.writeHead(200, { 'content-type': hit.type, 'cache-control': 'public, max-age=86400' });
+          res.end(hit.body);
+        } catch {
+          res.writeHead(404); res.end();
+        }
+        return;
+      }
       if (u.pathname.startsWith('/api/')) {
         // The app calls /api/products… (same-origin on Vercel, where the
         // serverless function strips the /api prefix). The reference server
