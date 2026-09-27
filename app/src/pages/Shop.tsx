@@ -183,7 +183,7 @@ export function Shop() {
             </div>
 
             {/* Desktop Categories */}
-            <div className="hidden lg:flex items-center gap-2 p-1.5 bg-white/[0.03] border border-white/10 rounded-[1.25rem]">
+            <div className="hidden lg:flex items-center gap-2 p-1.5 bg-white/[0.03] border border-white/10 rounded-[1.25rem] flex-1 min-w-0 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <Button
                 variant="ghost"
                 onClick={() => {
@@ -219,7 +219,7 @@ export function Shop() {
               ))}
             </div>
 
-            <div className="flex items-center gap-4 w-full lg:w-auto justify-between lg:justify-end">
+            <div className="flex items-center gap-4 w-full lg:w-auto shrink-0 justify-between lg:justify-end">
               <span className="text-white/50 text-sm font-medium tracking-wide tabular-nums">
                 {sortedProducts.length} <span className="text-[10px] uppercase font-black ml-1">Items Found</span>
               </span>
