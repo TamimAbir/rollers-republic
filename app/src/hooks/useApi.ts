@@ -2,10 +2,22 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import type { Order, Product } from '@/types';
 
+/**
+ * Card-projection product list (no description/specifications — ~8x smaller
+ * than the full catalog). Shop and NewArrivals render lists, not PDPs.
+ */
 export function useProducts() {
   return useQuery({
-    queryKey: ['products'],
-    queryFn: api.products.getAll,
+    queryKey: ['products', 'card'],
+    queryFn: api.products.getAllCard,
+  });
+}
+
+/** True single-page fetch for "new arrivals" rows. */
+export function useNewArrivals(count = 4) {
+  return useQuery({
+    queryKey: ['products', 'new-arrivals', count],
+    queryFn: () => api.products.getNewArrivals(count),
   });
 }
 

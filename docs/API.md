@@ -94,12 +94,29 @@ All payload shapes mirror `src/types/index.ts` (the canonical TypeScript types).
 
 | Method | Path | Query | Description |
 |--------|------|-------|-------------|
-| GET | `/products` | `?id=`, `?slug=`, `?categoryId=`, `?featured=true`, `?search=` | List/filter products |
+| GET | `/products` | `?id=`, `?slug=`, `?categoryId=`, `?featured=true`, `?inStock=true`, `?search=`, `?fields=`, `?page=`, `?limit=` | List/filter products |
 | POST | `/products` | — | Create product (admin) |
 | PATCH | `/products/:id` | — | Update product (admin) |
 | DELETE | `/products/:id` | — | Delete product (admin) |
 
 Filters are combinable. `search` matches against `name`, `description`, and `tags` (case-insensitive).
+
+#### Pagination & field projection
+
+- **Bare array by default.** Without `page`/`limit`, `/products` returns a plain
+  `Product[]` — existing consumers keep working.
+- **Envelope when paginating.** With `?page=` and/or `?limit=` the response is
+  `{ items, total, page, limit, totalPages }`. `total` reflects the *filtered*
+  set (filters combine with pagination). `limit` defaults to 50 and is clamped
+  to 1–1000; invalid values fall back to defaults instead of erroring.
+- **`?fields=card`** — curated projection for list views (id, name, slug,
+  price(s), image, category, rating, brand, stock flags, tags…). Omits the
+  PDP-only `description` and `specifications`, which are ~50% of the payload
+  (measured: 772KB → 339KB for the full list).
+- **`?fields=name,price,…`** — arbitrary comma-separated field projection;
+  unknown names are ignored, an empty list returns items unchanged.
+- `search` runs *before* projection, so description matching still works even
+  when descriptions are not returned.
 
 ### Categories
 

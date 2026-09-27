@@ -1,29 +1,21 @@
-import { useRef, useMemo } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Sparkles } from 'lucide-react';
-import { useProducts } from '@/hooks';
+import { useNewArrivals } from '@/hooks';
 import { formatPrice } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ProductSkeleton } from '@/components/ui/ProductSkeleton';
 
 /**
  * NewArrivals — "New Range of products, just arrived!" row.
- * Serves the newest in-stock products by id (WooCommerce id order = recency).
+ * One slim page from the API (`?fields=card&inStock=true&limit=4`) — the seed
+ * ships newest-first, so the server picks the four newest in-stock products.
  */
 export function NewArrivals() {
   const sectionRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(sectionRef, { once: true, margin: '-100px' });
-  const { data: products = [], isLoading } = useProducts();
-
-  const newProducts = useMemo(
-    () =>
-      products
-        .filter((p) => p.inStock && p.image)
-        .sort((a, b) => Number(b.id) - Number(a.id))
-        .slice(0, 4),
-    [products],
-  );
+  const { data: newProducts = [], isLoading } = useNewArrivals(4);
 
   if (!isLoading && newProducts.length === 0) return null;
 

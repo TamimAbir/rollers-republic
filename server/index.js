@@ -134,6 +134,54 @@ function parseQuery(url) {
 
 /* ------------------------------- Filters -------------------------------- */
 
+/**
+ * Fields shipped for list views (cards, rows, grids). `description` (43% of
+ * the payload) and `specifications` (9%) are PDP-only fields and are the main
+ * reason /api/products used to ship ~820KB per page load.
+ */
+const CARD_FIELDS = [
+  'id', 'name', 'slug', 'price', 'originalPrice', 'salePrice', 'image', 'images',
+  'category', 'categoryId', 'rating', 'reviewCount', 'brand', 'brandSlug',
+  'featured', 'inStock', 'stock', 'badge', 'tags', 'new',
+];
+
+/** Project each item onto an ordered field whitelist. Unknown names are ignored. */
+function projectFields(items, fieldsParam) {
+  const whitelist = fieldsParam === 'card'
+    ? CARD_FIELDS
+    : String(fieldsParam)
+        .split(',')
+        .map((f) => f.trim())
+        .filter(Boolean);
+  if (!whitelist.length) return items;
+  return items.map((item) => {
+    const out = {};
+    for (const key of whitelist) {
+      if (key in item) out[key] = item[key];
+    }
+    return out;
+  });
+}
+
+/**
+ * Parse `?page=` / `?limit=`. Returns null when neither is present (bare-array
+ * contract preserved). `limit` is clamped to 1..1000 so a runaway client can't
+ * request the whole store; invalid values fall back to the defaults.
+ */
+function parsePagination(query) {
+  const hasPage = query.page !== undefined;
+  const hasLimit = query.limit !== undefined;
+  if (!hasPage && !hasLimit) return null;
+  const DEFAULT_LIMIT = 50;
+  const MAX_LIMIT = 1000;
+  let limit = Number.parseInt(query.limit ?? '', 10);
+  if (!Number.isFinite(limit)) limit = DEFAULT_LIMIT;
+  limit = Math.min(MAX_LIMIT, Math.max(1, limit));
+  let page = Number.parseInt(query.page ?? '1', 10);
+  if (!Number.isFinite(page) || page < 1) page = 1;
+  return { page, limit };
+}
+
 function filterProducts(query) {
   let items = [...db.products];
 
@@ -141,6 +189,7 @@ function filterProducts(query) {
   if (query.slug) items = items.filter((p) => p.slug === query.slug);
   if (query.categoryId) items = items.filter((p) => p.categoryId === query.categoryId);
   if (query.featured === 'true') items = items.filter((p) => p.featured);
+  if (query.inStock === 'true') items = items.filter((p) => p.inStock);
   if (query.search) {
     const q = query.search.toLowerCase();
     items = items.filter(
@@ -150,6 +199,25 @@ function filterProducts(query) {
         (p.tags || []).some((t) => t.toLowerCase().includes(q)),
     );
   }
+
+  // Field projection runs after filtering (search may match on description)
+  // but before pagination, so `total` reflects the full filtered set.
+  if (query.fields) items = projectFields(items, query.fields);
+
+  const pagination = parsePagination(query);
+  if (pagination) {
+    const { page, limit } = pagination;
+    const total = items.length;
+    const totalPages = Math.max(1, Math.ceil(total / limit));
+    return {
+      items: items.slice((page - 1) * limit, page * limit),
+      total,
+      page,
+      limit,
+      totalPages,
+    };
+  }
+
   return items;
 }
 

@@ -61,6 +61,26 @@ const unwrapList = <T>(payload: ListResponse<T>): T[] => {
   return Array.isArray(payload) ? payload : payload.items;
 };
 
+/**
+ * Envelope returned by list endpoints when `page`/`limit` are supplied.
+ * Without them the API keeps its bare-array shape for backwards compatibility.
+ */
+export interface Paginated<T> {
+  items: T[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
+/**
+ * Product shape served by `?fields=card` for list views: the PDP-only fields
+ * (`description`, `specifications` — 50%+ of the payload) are omitted. A full
+ * `Product` is always assignable to this, so consumers accept both shapes.
+ */
+export type ProductCard = Omit<Product, 'description' | 'specifications'> &
+  Partial<Pick<Product, 'description' | 'specifications'>>;
+
 const getStoreProducts = () => useDatabaseStore.getState().products;
 const getStoreCategories = () => useDatabaseStore.getState().categories;
 const getStoreOrders = () => useDatabaseStore.getState().orders;
@@ -80,11 +100,15 @@ export interface ApiClientOptions {
 export interface ApiClient {
   products: {
     getAll: () => Promise<Product[]>;
+    /** Slim card projection — list views should prefer this over getAll. */
+    getAllCard: () => Promise<ProductCard[]>;
+    /** Newest in-stock products (one small page instead of the whole catalog). */
+    getNewArrivals: (count?: number) => Promise<ProductCard[]>;
     getById: (id: string) => Promise<Product | undefined>;
     getBySlug: (slug: string) => Promise<Product | undefined>;
     getByCategory: (categoryId: string) => Promise<Product[]>;
     getFeatured: () => Promise<Product[]>;
-    search: (query: string) => Promise<Product[]>;
+    search: (query: string) => Promise<ProductCard[]>;
     create: (product: Product) => Promise<Product>;
     update: (id: string, updates: Partial<Product>) => Promise<Partial<Product> & { id: string }>;
     delete: (id: string) => Promise<{ success: boolean }>;
@@ -169,6 +193,29 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
     products: {
       getAll: () => withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products')), async () => simulateApiCall(getStoreProducts()), '/products'),
 
+      // Card projection: list views never need descriptions (~50% of the payload).
+      getAllCard: () =>
+        withFallback<ProductCard[]>(
+          async () => unwrapList(await fetchJson<ListResponse<ProductCard>>('/products?fields=card')),
+          async () => simulateApiCall(getStoreProducts()),
+          '/products?fields=card',
+        ),
+
+      // The seed ships newest-first, so one small page is the whole "new arrivals" row.
+      getNewArrivals: (count = 4) =>
+        withFallback<ProductCard[]>(
+          async () =>
+            unwrapList(await fetchJson<ListResponse<ProductCard>>(`/products?fields=card&inStock=true&limit=${count}`)),
+          async () =>
+            simulateApiCall(
+              [...getStoreProducts()]
+                .filter((p) => p.inStock && p.image)
+                .sort((a, b) => Number(b.id) - Number(a.id))
+                .slice(0, count),
+            ),
+          `/products?fields=card&inStock=true&limit=${count}`,
+        ),
+
       getById: (id: string) =>
         withFallback<Product | undefined>(
           async () => {
@@ -200,8 +247,8 @@ export function createApiClient(options: ApiClientOptions = {}): ApiClient {
         withFallback<Product[]>(async () => unwrapList(await fetchJson<ListResponse<Product>>('/products?featured=true')), async () => getStoreProducts().filter((p) => p.featured), '/products?featured=true'),
 
       search: (query: string) =>
-        withFallback<Product[]>(
-          async () => unwrapList(await fetchJson<ListResponse<Product>>(`/products?search=${encodeURIComponent(query)}`)),
+        withFallback<ProductCard[]>(
+          async () => unwrapList(await fetchJson<ListResponse<ProductCard>>(`/products?search=${encodeURIComponent(query)}&fields=card`)),
           async () => {
             const lowerQuery = query.toLowerCase();
             return getStoreProducts().filter(

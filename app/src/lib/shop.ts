@@ -1,4 +1,5 @@
-import type { Category, Product } from '@/types';
+import type { Category } from '@/types';
+import type { ProductCard } from '@/lib/api';
 
 export const INITIAL_VISIBLE_PRODUCTS = 12;
 export const LOAD_MORE_STEP = 12;
@@ -11,7 +12,7 @@ export function resolveCategoryIdFromSlug(categories: Category[], selectedCatego
   return categories.find((category) => category.slug === selectedCategorySlug)?.id ?? null;
 }
 
-export function filterProducts(products: Product[], selectedCategoryId: string | null, searchQuery: string): Product[] {
+export function filterProducts(products: ProductCard[], selectedCategoryId: string | null, searchQuery: string): ProductCard[] {
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
   return products.filter((product) => {
@@ -21,13 +22,13 @@ export function filterProducts(products: Product[], selectedCategoryId: string |
     }
 
     const matchesSearch = product.name.toLowerCase().includes(normalizedQuery)
-      || product.description.toLowerCase().includes(normalizedQuery);
+      || (product.description ?? '').toLowerCase().includes(normalizedQuery);
 
     return matchesCategory && matchesSearch;
   });
 }
 
-export function sortProducts(products: Product[], sortBy: string): Product[] {
+export function sortProducts(products: ProductCard[], sortBy: string): ProductCard[] {
   return [...products].sort((a, b) => {
     switch (sortBy) {
       case 'price-low':
@@ -44,7 +45,7 @@ export function sortProducts(products: Product[], sortBy: string): Product[] {
   });
 }
 
-export function getVisibleProducts(products: Product[], visibleCount: number): Product[] {
+export function getVisibleProducts(products: ProductCard[], visibleCount: number): ProductCard[] {
   return products.slice(0, Math.max(0, visibleCount));
 }
 

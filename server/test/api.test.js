@@ -86,6 +86,74 @@ describe('RollON Reference API', () => {
       assert.ok(body.every((p) => p.featured === true));
     });
 
+    test('GET /products?inStock=true filters to in-stock items', async () => {
+      const { body } = await get('/products?inStock=true&limit=1000');
+      assert.ok(body.items.length > 0);
+      assert.ok(body.items.every((p) => p.inStock === true));
+    });
+
+    test('GET /products without page/limit keeps the bare-array contract', async () => {
+      const { body } = await get('/products');
+      assert.ok(Array.isArray(body));
+    });
+
+    test('GET /products?limit=5 returns a paginated envelope', async () => {
+      const { body } = await get('/products?limit=5');
+      assert.ok(!Array.isArray(body));
+      assert.equal(body.items.length, 5);
+      assert.equal(body.limit, 5);
+      assert.equal(body.page, 1);
+      assert.ok(body.total > body.items.length);
+      assert.ok(body.totalPages > 1);
+      // envelope items are full products when no fields= is requested
+      assert.ok(typeof body.items[0].description === 'string');
+    });
+
+    test('GET /products?page=2 slices the catalog without changing total', async () => {
+      const p1 = await get('/products?limit=10');
+      const p2 = await get('/products?limit=10&page=2');
+      assert.notEqual(p1.body.items[0].id, p2.body.items[0].id);
+      assert.equal(p1.body.total, p2.body.total);
+      assert.equal(p2.body.page, 2);
+    });
+
+    test('pagination combines with filters and reports the filtered total', async () => {
+      const featured = await get('/products?featured=true');
+      const { body } = await get('/products?featured=true&limit=2');
+      assert.equal(body.total, featured.body.length);
+      assert.equal(body.items.length, Math.min(2, featured.body.length));
+    });
+
+    test('GET /products?fields=card drops PDP-only fields from the payload', async () => {
+      const { body } = await get('/products?fields=card&limit=5');
+      for (const p of body.items) {
+        assert.equal(p.description, undefined);
+        assert.equal(p.specifications, undefined);
+        assert.ok(p.name && p.slug);
+        assert.equal(typeof p.price, 'number');
+        assert.ok('image' in p);
+      }
+    });
+
+    test('GET /products?fields=name,price projects explicit fields only', async () => {
+      const { body } = await get('/products?fields=name,price&limit=3');
+      for (const p of body.items) {
+        assert.deepEqual(Object.keys(p).sort(), ['name', 'price']);
+      }
+    });
+
+    test('limit is clamped to a sane maximum', async () => {
+      const { body } = await get('/products?limit=99999');
+      assert.equal(body.limit, 1000);
+    });
+
+    test('invalid page/limit fall back to defaults instead of crashing', async () => {
+      const { body } = await get('/products?limit=abc&page=-3');
+      assert.equal(body.limit, 50);
+      assert.equal(body.page, 1);
+      assert.equal(body.items.length, 50);
+    });
+
     test('GET /categories returns seeded categories', async () => {
       const { body } = await get('/categories');
       assert.ok(Array.isArray(body));

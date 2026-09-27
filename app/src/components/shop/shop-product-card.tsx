@@ -4,12 +4,12 @@ import { ShoppingCart, Star } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatPrice, cn } from '@/lib/utils';
-import type { Product } from '@/types';
+import type { ProductCard } from '@/lib/api';
 
 interface ShopProductCardProps {
-  product: Product;
+  product: ProductCard;
   index: number;
-  onAddToCart: (product: Product) => void;
+  onAddToCart: (product: ProductCard) => void;
 }
 
 export function ShopProductCard({ product, index, onAddToCart }: ShopProductCardProps) {

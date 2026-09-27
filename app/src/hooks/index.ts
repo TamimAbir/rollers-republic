@@ -1,5 +1,6 @@
 export { 
   useProducts, 
+  useNewArrivals,
   useProduct, 
   useProductBySlug, 
   useProductsByCategory, 

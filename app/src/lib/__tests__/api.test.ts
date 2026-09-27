@@ -113,7 +113,25 @@ describe('api client — remote path (injectable factory)', () => {
 
     const results = await api.products.search('grinder');
     expect(results).toEqual([mockProduct]);
-    expect(fetchMock).toHaveBeenCalledWith('http://api.test/products?search=grinder', expect.any(Object));
+    expect(fetchMock).toHaveBeenCalledWith('http://api.test/products?search=grinder&fields=card', expect.any(Object));
+  });
+
+  it('products.getAllCard requests the slim card projection', async () => {
+    const fetchMock = vi.fn(async () => jsonResponse([mockProduct]));
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: fetchMock as unknown as typeof fetch });
+
+    const products = await api.products.getAllCard();
+    expect(products).toEqual([mockProduct]);
+    expect(fetchMock).toHaveBeenCalledWith('http://api.test/products?fields=card', expect.any(Object));
+  });
+
+  it('products.getNewArrivals requests one slim in-stock page', async () => {
+    const fetchMock = vi.fn(async () => jsonResponse([mockProduct]));
+    const api = createApiClient({ useRemote: true, baseUrl: 'http://api.test', fetchImpl: fetchMock as unknown as typeof fetch });
+
+    const products = await api.products.getNewArrivals(4);
+    expect(products).toEqual([mockProduct]);
+    expect(fetchMock).toHaveBeenCalledWith('http://api.test/products?fields=card&inStock=true&limit=4', expect.any(Object));
   });
 
   it('categories.getAll returns the remote list', async () => {

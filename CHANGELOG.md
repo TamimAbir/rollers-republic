@@ -6,6 +6,13 @@ All notable changes to this project are documented here. Format based on
 ## [Unreleased]
 
 ### Added
+- **Pagination + field projection on `/api/products`** — `?page=`/`?limit=`
+  return a `{ items, total, page, limit, totalPages }` envelope (bare array
+  preserved otherwise), and `?fields=card` serves list views without the
+  PDP-only `description`/`specifications` fields. Shop payloads drop from
+  ~772KB to ~339KB and the home "New Arrivals" row fetches a single 1.6KB
+  page instead of the whole catalog. `?inStock=true` filter added; server
+  and client test suites cover the new parameters.
 - **Single source of truth for catalog data** — `server/seed.json` now feeds the
   client directly: `app/scripts/generate-catalog.mjs` derives the typed fallback
   dataset (`app/src/data/catalog.ts`) from it at build time (`predev`/`prebuild`
