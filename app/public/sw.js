@@ -3,7 +3,7 @@
  * Offline-first caching for the storefront.
  * Cache name is versioned — bump CACHE_VERSION when assets change.
  */
-const CACHE_VERSION = 'rr-v1';
+const CACHE_VERSION = 'rr-v2';
 const CACHE_NAME = `${CACHE_VERSION}`;
 
 const PRECACHE_URLS = [
@@ -58,15 +58,35 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets: cache-first, then network
+  // API requests: network-first with cache fallback (degraded mode). Never
+  // serve cached API data while the network is reachable — the old cache-first
+  // branch froze repeat visitors on their first-visit catalog/prices.
+  const url = new URL(request.url);
+  if (url.origin === self.location.origin && url.pathname.startsWith('/api/')) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response.ok) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(request)),
+    );
+    return;
+  }
+
+  // Static assets: cache-first, then network. Respect no-store responses.
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
 
       return fetch(request)
         .then((response) => {
-          // Only cache successful, same-origin responses
-          if (response.ok && new URL(request.url).origin === self.location.origin) {
+          // Only cache successful, same-origin, cacheable responses
+          const noStore = (response.headers.get('cache-control') ?? '').includes('no-store');
+          if (response.ok && !noStore && new URL(request.url).origin === self.location.origin) {
             const copy = response.clone();
             caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
           }
