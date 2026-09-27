@@ -1,5 +1,6 @@
 # Rollers Republic — Smoking Headshop Storefront
 
+[![CI](https://github.com/TamimAbir/rollers-republic/actions/workflows/ci.yml/badge.svg)](https://github.com/TamimAbir/rollers-republic/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Stack](https://img.shields.io/badge/React%2019%20·%20TS%20strict%20·%20Vite%207-2b2b2b?logo=react)](docs/ARCHITECTURE.md)
 [![Tests](https://img.shields.io/badge/tests-174%20passing-2ECC71)](#quality-gates)

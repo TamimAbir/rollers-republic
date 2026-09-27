@@ -6,6 +6,14 @@ on:
   pull_request:
     branches: [main]
 
+# Least privilege by default; concurrent pushes cancel superseded runs.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   frontend-quality:
     runs-on: ubuntu-latest
