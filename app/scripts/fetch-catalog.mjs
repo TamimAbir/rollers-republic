@@ -1,19 +1,22 @@
 #!/usr/bin/env node
 /**
- * fetch-catalog.mjs — one-time catalog snapshot from Rollers Republic's live
- * WooCommerce Store API (SSOT §7).
+ * fetch-catalog.mjs — catalog snapshot from Rollers Republic's live
+ * WooCommerce Store API into server/seed.json (the data SSOT, SSOT §7).
  *
  *   node scripts/fetch-catalog.mjs
  *
  * Outputs:
  *   1. scripts/catalog-snapshot.json  — raw normalized intermediate (debug/re-run)
- *   2. ../src/data/products.ts        — THE catalog single source of truth
+ *   2. ../../server/seed.json         — THE catalog single source of truth
  *   3. ../public/images/products/*    — local images for the first 40 in-stock products
+ *
+ * The client bundle derives its fallback dataset from seed.json at build time
+ * (scripts/generate-catalog.mjs → src/data/catalog.ts) — never hand-edit both.
  *
  * No dependencies — uses Node 20+ global fetch. Re-run anytime to refresh.
  */
 import { writeFileSync, mkdirSync, existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -140,7 +143,7 @@ function normalize(raw) {
     reviewCount: Number(raw.review_count) || 0,
     ...(brand ? { brand, brandSlug } : {}),
     ...(Object.keys(specs).length ? { specifications: specs } : {}),
-    // script-managed metadata (stripped before writing products.ts)
+    // script-managed metadata (stripped before writing seed.json)
     __meta: { image, inStock, featured: false, isNew: false },
   };
 }
@@ -159,69 +162,6 @@ async function fetchAllProducts() {
     page++;
   }
   return all;
-}
-
-function buildProductsTs(products, categories, brands) {
-  const esc = (s) => String(s).replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/\n/g, ' ');
-  const catBlock = categories
-    .map((c, i) => `  {\n    id: '${i + 1}',\n    name: '${esc(c.name)}',\n    slug: '${c.slug}',\n    description: '${esc(c.description)}',\n    icon: '${c.icon}',\n    gradient: '${c.gradient}',\n    productCount: ${products.filter((p) => p.categoryId === c.slug).length}\n  }`)
-    .join(',\n');
-
-  const prodBlock = products
-    .map((p) => {
-      const specs = p.specifications
-        ? `{ ${Object.entries(p.specifications).map(([k, v]) => `'${esc(k)}': '${esc(v)}'`).join(', ')} }`
-        : 'undefined';
-      const tags = p.tags.length ? `['${p.tags.map(esc).join("', '")}']` : 'undefined';
-      return `  {\n    id: '${esc(p.id)}',\n    name: '${esc(p.name)}',\n    slug: '${esc(p.slug)}',\n    description: '${esc(p.description)}',\n    price: ${p.price},\n${p.originalPrice != null ? `    originalPrice: ${p.originalPrice},\n` : ''}    image: '${esc(p.image)}',\n    category: '${esc(p.category)}',\n    categoryId: '${esc(p.categoryId)}',\n    tags: ${tags},\n    stock: ${p.stock},\n    inStock: ${p.inStock},\n    rating: ${p.rating},\n    reviewCount: ${p.reviewCount},\n${p.brand ? `    brand: '${esc(p.brand)}',\n    brandSlug: '${esc(p.brandSlug)}',\n` : ''}${p.featured ? '    featured: true,\n' : ''}${p.isNew ? '    new: true,\n' : ''}    specifications: ${specs}\n  }`;
-    })
-    .join(',\n');
-
-  const brandBlock = brands
-    .map((b) => `  { id: '${esc(b.id)}', name: '${esc(b.name)}', slug: '${esc(b.slug)}' },`)
-    .join('\n');
-
-  return `import type { Product, Category, Brand } from '@/types';
-
-/**
- * Rollers Republic catalog — SINGLE SOURCE OF TRUTH for all product data (SSOT §7).
- * Managed by scripts/fetch-catalog.mjs (snapshot of the client's live WooCommerce
- * catalog). Do not hand-edit; re-run the script to refresh.
- */
-
-export const categories: Category[] = [
-${catBlock}
-];
-
-export const brands: Brand[] = [
-${brandBlock}
-];
-
-export const products: Product[] = [
-${prodBlock}
-];
-
-export const testimonials = [
-  {
-    id: '1',
-    name: 'Tanvir A.',
-    rating: 5,
-    quote: 'Best headshop in Dhaka. Original RAW papers, fair prices, and delivery the same day I ordered.',
-  },
-  {
-    id: '2',
-    name: 'Nafis R.',
-    rating: 5,
-    quote: 'The glass pieces are beautiful and packed really well. Bro Bear knows his stuff.',
-  },
-  {
-    id: '3',
-    name: 'Sami K.',
-    rating: 4,
-    quote: 'Ordered on WhatsApp, paid bKash, and my package arrived within hours. Highly recommended.',
-  },
-];
-`;
 }
 
 async function downloadImage(url, dest) {
@@ -295,11 +235,24 @@ async function main() {
     return rest;
   });
 
+  const testimonials = [
+    { id: '1', name: 'Tanvir A.', rating: 5, quote: 'Best headshop in Dhaka. Original RAW papers, fair prices, and delivery the same day I ordered.' },
+    { id: '2', name: 'Nafis R.', rating: 5, quote: 'The glass pieces are beautiful and packed really well. Bro Bear knows his stuff.' },
+    { id: '3', name: 'Sami K.', rating: 4, quote: 'Ordered on WhatsApp, paid bKash, and my package arrived within hours. Highly recommended.' },
+  ];
+
+  // Category tile images: first in-stock product image per category
+  for (const c of categories) {
+    const first = clean.find((p) => p.categoryId === c.slug && p.inStock && p.image);
+    if (first) c.image = first.image;
+  }
+
   writeFileSync(join(__dirname, 'catalog-snapshot.json'), JSON.stringify({ fetchedAt: new Date().toISOString(), count: clean.length, products: clean }, null, 2));
-  writeFileSync(join(ROOT, 'src', 'data', 'products.ts'), buildProductsTs(clean, categories, brands));
-  console.log(`✓ src/data/products.ts written (${clean.length} products, ${categories.length} categories, ${brands.length} brands)`);
+  const seedPath = resolve(__dirname, '..', '..', 'server', 'seed.json');
+  writeFileSync(seedPath, JSON.stringify({ categories, products: clean, testimonials, brands }, null, 2) + '\n');
+  console.log(`✓ server/seed.json written (${clean.length} products, ${categories.length} categories, ${brands.length} brands, ${testimonials.length} testimonials)`);
   console.log(`✓ ${localized} product images localized to public/images/products/`);
-  console.log('→ Now run: npm run check:seed (server sync gate)');
+  console.log('→ Now run: cd app && node scripts/generate-catalog.mjs (refreshes src/data/catalog.ts)');
 }
 
 main().catch((e) => {

@@ -11,7 +11,8 @@ RollON is a configuration-driven e-commerce template built with React, TypeScrip
 - `public/config.json` - Runtime configuration (optional)
 
 ### Data Layer
-- `src/data/products.ts` - Product catalog (can be replaced with API/CSV)
+- `../../server/seed.json` - Catalog single source of truth (hand-edit here)
+- `src/data/catalog.ts` - Generated typed fallback dataset (from seed.json at build time — do not edit)
 - `src/store/` - State management (Zustand)
 - `src/lib/api.ts` - API integration layer
 

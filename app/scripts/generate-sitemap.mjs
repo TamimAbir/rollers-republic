@@ -18,10 +18,9 @@
  * Skips out-of-stock product URLs (they 404-behave in the UI and waste
  * crawl budget); the count is printed either way.
  */
-import { writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { createRequire } from 'node:module';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const appDir = resolve(__dirname, '..');
@@ -30,23 +29,9 @@ const outFile = resolve(appDir, 'public/sitemap.xml');
 
 const SITE_URL = process.env.SITE_URL || 'https://rollerspub.com';
 
-// --- Load the canonical catalog (same esbuild transpile as generate-seed.mjs) ---
-const require = createRequire(import.meta.url);
-let esbuild;
-try {
-  esbuild = require('esbuild');
-} catch {
-  esbuild = require(require.resolve('esbuild', { paths: [appDir] }));
-}
-const built = resolve('/tmp', `rr-sitemap-data-${process.pid}.mjs`);
-await esbuild.build({
-  entryPoints: [resolve(appDir, 'src/data/products.ts')],
-  format: 'esm',
-  outfile: built,
-  bundle: false,
-  logLevel: 'error',
-});
-const { products, categories, brands } = await import(`file://${built}`);
+// --- Load the canonical catalog (server/seed.json is the SSOT) ---
+const seed = JSON.parse(readFileSync(resolve(rootDir, 'server', 'seed.json'), 'utf8'));
+const { products, categories, brands } = seed;
 
 // --- Helpers ---
 const esc = (s) =>

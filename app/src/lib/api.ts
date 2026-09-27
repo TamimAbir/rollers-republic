@@ -1,4 +1,4 @@
-import { testimonials as mockTestimonials, brands as mockBrands } from '../data/products';
+import { testimonials as mockTestimonials, brands as mockBrands } from '../data/catalog';
 import { useDatabaseStore } from '../store/databaseStore';
 import type { Brand, Category, Customer, Order, Product, Testimonial } from '@/types';
 

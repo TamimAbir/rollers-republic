@@ -8,20 +8,17 @@ contract.
 - **Zero dependencies** — uses only Node.js built-ins (`http`, `crypto`).
 - **PBKDF2 password hashing** via `crypto.scryptSync` (constant-time verify).
 - **Bearer-token auth** with 7-day expiry, stored in memory.
-- **In-memory store** seeded from `seed.json` (generated from the frontend's
-  canonical `src/data/products.ts` — no duplicated data).
+- **In-memory store** seeded from `seed.json` — the catalog single source of truth,
+  shared with the client's build-time-generated fallback dataset (no duplicated data).
 - **CORS enabled** so the Vite dev server (port 5173) can call it directly.
 
 ## Quick Start
 
 ```bash
-# 1. (Re)generate seed.json from the frontend data (only when products change)
-npm run generate:seed
-
-# 2. Start the server
+# 1. Start the server (seed.json is the SSOT — edit it directly, no generation step)
 npm start            # → http://localhost:8787
 
-# 3. Run the integration tests (node:test, no extra deps)
+# 2. Run the integration tests (node:test, zero dependencies)
 npm test
 ```
 
@@ -85,7 +82,7 @@ separate host.
 vercel --prod
 ```
 
-The live reference: `https://rollon-delta.vercel.app/api/products` (200 + JSON).
+The live reference: `https://rollers-republic.vercel.app/api/products` (200 + JSON).
 
 > **Honest limitation:** serverless = in-memory. Catalog reads (products,
 > categories, testimonials, search) are fully functional. Writes (register,
@@ -103,9 +100,8 @@ at it with `VITE_API_BASE_URL=https://your-host`.
 ```
 server/
 ├── index.js                  # Server + router + auth (single file, ~400 lines)
-├── seed.json                 # Generated snapshot of the frontend catalog
-├── scripts/
-│   └── generate-seed.mjs     # Regenerates seed.json from src/data/products.ts
+├── seed.json                 # Catalog single source of truth (client derives catalog.ts from it)
 └── test/
-    └── api.test.js           # 23 integration tests (node:test)
+    ├── api.test.js           # Integration tests (node:test)
+    └── seed-injection.test.js
 ```

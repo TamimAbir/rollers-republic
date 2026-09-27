@@ -6,6 +6,17 @@ All notable changes to this project are documented here. Format based on
 ## [Unreleased]
 
 ### Added
+- **Single source of truth for catalog data** — `server/seed.json` now feeds the
+  client directly: `app/scripts/generate-catalog.mjs` derives the typed fallback
+  dataset (`app/src/data/catalog.ts`) from it at build time (`predev`/`prebuild`
+  hooks) and CI gates drift (`--check`). The hand-maintained duplicate
+  `app/src/data/products.ts` (17k lines) and the reverse seed-generation pipeline
+  (`server/scripts/generate-seed.mjs` + `check:seed`) are gone; the sitemap
+  generator reads seed.json directly and the reference API needs zero installs.
+
+### Fixed
+- Brand 67 "D&K" no longer renders as "D&amp;K" — the last HTML entity escaped
+  into seed.json but not the client copy (the exact drift class this task removes).
 - **Build-time prerendering** — `npm run build` now renders all 484 sitemap
   routes (every in-stock PDP + key pages) to static HTML, so bots, social
   scrapers, and no-JS clients receive fully-populated pages with per-page

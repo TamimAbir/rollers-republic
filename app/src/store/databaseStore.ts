@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { products as initialProducts, categories as initialCategories, brands as initialBrands } from '../data/products';
+import { products as initialProducts, categories as initialCategories, brands as initialBrands } from '../data/catalog';
 import type { Product, Category, Brand, Order, Customer, User } from '@/types';
 
 /**

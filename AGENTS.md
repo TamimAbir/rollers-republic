@@ -27,7 +27,7 @@ npm run test:e2e:degraded  # Degraded-mode: remote API down → banner + fallbac
 # If the reference API server changed:
 cd ../server
 npm test         # 23 integration tests
-npm run check:seed  # seed.json must match app/src/data/products.ts
+npm run catalog:check  # catalog.ts must derive from server/seed.json (SSOT)
 ```
 
 ## Definition of Done (MANDATORY before declaring any task complete)
@@ -84,7 +84,7 @@ down; apply it uniformly.
 - **Accessibility**: automated axe-core WCAG 2.1 AA scan in E2E suite (13 routes)
 - **SEO/prerender**: 484 routes static-prerendered at build (`npm run build` → `app/scripts/prerender.mjs`); 574-URL sitemap; per-page meta; Product + LocalBusiness JSON-LD
 - **Production API**: reference API deployed as Vercel serverless function (`api/store.js`, `/api/*` rewrite); live site talks to real backend same-origin
-- **Catalog**: 949 real products / 8 categories / 82 brands seeded from the client's WooCommerce Store API — regenerate via `app/scripts/fetch-catalog.mjs`, keep seed.json in sync (`npm run check:seed`)
+- **Catalog**: 949 real products / 8 categories / 82 brands snapshotted from the client's WooCommerce Store API into `server/seed.json` — the data SSOT. The client's fallback dataset (`app/src/data/catalog.ts`) is generated from it at build time (`app/scripts/generate-catalog.mjs`, wired via `predev`/`prebuild`; CI gates drift with `--check`). Refresh via `app/scripts/fetch-catalog.mjs`.
 
 ## Accessibility Requirements
 
@@ -141,13 +141,13 @@ To prevent regressions, broken mock features, and code duplication, ALL AGENTS M
 - If you build a button, it MUST have an `onClick` or function as a proper `<Link>`.
 
 ### 2. No Ghost Assets (404 Prevention)
-- Do NOT reference images or assets in code (e.g., `src/data/products.ts`) that do not exist in the repository (`public/images/`).
+- Do NOT reference images or assets in code (e.g., `src/data/catalog.ts`) that do not exist in the repository (`public/images/`).
 - Always check the `public/images` directory before hardcoding image paths.
 
 ### 3. Kill Prototype/Mock Crutches Promptly
-- Mock data files (`products.ts`) and "fake auth" fallbacks (`VITE_ENABLE_DEMO_AUTH`) are for early prototyping ONLY.
+- Mock data files (`catalog.ts`) and "fake auth" fallbacks (`VITE_ENABLE_DEMO_AUTH`) are for early prototyping ONLY.
 - When shifting to a production mindset, these fallback mechanisms MUST be removed or explicitly disabled. Do not leave "silent failures" that show mock data when the real API drops. 
-- DUPLICATE DATA IS BANNED: Never create redundant files like `products_main.ts` when `products.ts` exists. Update the single source of truth.
+- DUPLICATE DATA IS BANNED: Never create redundant files like `catalog_main.ts` when `catalog.ts` exists, and never hand-edit the generated `catalog.ts` — edit `server/seed.json` (the SSOT) and regenerate.
 
 ### 4. Catch-All Routing
 - SPAs must always handle unknown routes proactively. Ensure `App.tsx` has a fallback `*` route pointing to a styled `404 Not Found` page.

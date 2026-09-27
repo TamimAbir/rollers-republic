@@ -18,7 +18,8 @@ vapes and munchies — imported from the UK with same-day Dhaka delivery.
 ## Highlights
 
 - **Real catalog, not lorem ipsum** — 949 products / 82 brands / 8 categories snapshotted
-  from the client's live WooCommerce Store API into one typed data file
+  from the client's live WooCommerce Store API into `server/seed.json`, the single
+  source of truth; the client's typed fallback dataset is derived from it at build time
 - **Static-prerendered at build** — all 484 indexable routes (477 in-stock PDPs + key
   pages) emit real HTML with per-page titles and JSON-LD, so social scrapers and no-JS
   clients get full content in the first response (SSOT §11 M6)
@@ -60,8 +61,8 @@ npm run test:e2e        # Playwright storeflow + axe-core a11y (24 specs)
 npm run test:e2e:degraded
 
 cd ../server
-npm test                # 28 API integration tests
-cd .. && npm run check:seed   # seed.json ↔ products.ts sync gate
+npm test                # 28 API integration tests — zero dependencies, no install needed
+cd .. && npm run catalog:check # catalog.ts derives from server/seed.json (SSOT gate)
 ```
 
 ## Deployment (Vercel)
@@ -79,22 +80,23 @@ npx vercel@latest deploy --prebuilt --prod
 
 ## Catalog refresh
 
+Edit `server/seed.json` directly for catalog changes (it is the single source of truth),
+or re-snapshot from the live store:
+
 ```bash
 cd app
-node scripts/fetch-catalog.mjs     # snapshot from rollerspub.com Woo Store API
-cd ..
-node server/scripts/generate-seed.mjs
-npm run check:seed
+node scripts/fetch-catalog.mjs     # snapshot from rollerspub.com Woo Store API → ../../server/seed.json
+node scripts/generate-catalog.mjs  # refresh src/data/catalog.ts from seed.json (also runs via predev/prebuild)
 ```
 
 ## Project structure
 
 ```
 app/                 React storefront (Vite)
-  src/data/          products.ts — THE catalog single source of truth
+  src/data/          catalog.ts — generated fallback dataset (from server/seed.json)
   src/lib/config.ts  ALL business configuration (SSOT §8)
-  scripts/           catalog fetch · sitemap · prerender · OG image · pitch captures
-server/              Zero-dependency Node reference API (+ 28 integration tests)
+  scripts/           catalog fetch · catalog generator · sitemap · prerender · OG image
+server/              Zero-dependency Node reference API; seed.json = data SSOT (+ 28 integration tests)
 api/store.js         Vercel serverless wrapper (same-origin /api/* in production)
 docs/                SSOT · ARCHITECTURE · API · SEO-AUDIT · PITCH (+ sales one-pager)
 .github/             CI (typecheck · lint · test · build) · CodeQL · issue templates

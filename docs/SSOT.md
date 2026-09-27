@@ -149,9 +149,13 @@ structured data JSON-LD: `Organization`, `Store` with **two** `LocalBusiness` ou
 - `export interface Brand { id: string; name: string; slug: string; logo?: string }`
 
 ### Single source of data
-`app/src/data/products.ts` is THE one catalog file (products, categories, brands,
-testimonials). Duplicate data files are **banned** (template AGENTS.md rule). Product images
-live in `app/public/images/products/`; reference only files that exist there (no ghost assets).
+`server/seed.json` is THE one catalog file (categories, products, testimonials, brands) — hand-edit
+data there. The client's fallback dataset (`app/src/data/catalog.ts`) is **generated from it at build
+time** by `app/scripts/generate-catalog.mjs` (wired via the `predev`/`prebuild` npm hooks and verified
+in CI with `--check`). Duplicate data files are **banned** (template AGENTS.md rule); the generated
+`catalog.ts` is committed so unit tests and CI work without a generation step, but it is never edited
+by hand. Product images are served through the same-origin `/img/*` proxy or from
+`app/public/images/products/`; reference only files that exist there (no ghost assets).
 
 ### Seeding real data (one-time snapshot)
 `app/scripts/fetch-catalog.mjs` (Node ≥20, no new deps — use global `fetch`):
@@ -164,8 +168,9 @@ live in `app/public/images/products/`; reference only files that exist there (no
 3. Map categories to the 6-card set used on the homepage; keep every Woo subcategory as a tag.
 4. Download product images for the **first 40 in-stock products** into `app/public/images/products/`
    (filename: `${slug}${ext}`), referenced locally. Others keep remote URLs in `image` (allowed v1).
-5. Write results into `app/src/data/products.ts` (human-readable, sorted by category) and update
-   `server/seed.json` via the existing `npm run check:seed` gate (`server/scripts/check-seed-sync.mjs`).
+5. Write results into `server/seed.json` (the SSOT), then run `node scripts/generate-catalog.mjs`
+   to refresh the client's generated `src/data/catalog.ts`. Category tile images are preserved on
+   refresh (first in-stock product image per category).
 
 **Never hand-edit generated data into a second file.** Re-run the script to refresh.
 
@@ -214,7 +219,7 @@ A task is NOT done unless ALL hold (CI enforces; never rely on CI alone):
 3. `npm run test:coverage` — clears thresholds 84/75/80/84 (stmts/branch/funcs/lines)
 4. `npm run build` — TypeScript + Vite clean
 5. `npm run test:e2e` — storeflow + a11y green (when UI changed)
-6. `cd server && npm test` — if `server/` changed; plus `npm run check:seed` if catalog changed
+6. `cd server && npm test` — if `server/` changed; plus `node app/scripts/generate-catalog.mjs --check` if catalog changed
 7. Docs updated in the same commit when behavior changes (README, CHANGELOG, this file)
 8. Every claim in your summary is backed by a command you ran — no "done" from memory
 9. Working tree committed; `git status --short` clean
