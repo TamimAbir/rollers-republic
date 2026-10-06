@@ -135,12 +135,30 @@ function startStaticServer() {
 // ---------- routes from sitemap (pathname only, deduped) ----------
 const sitemap = readFileSync(join(appDir, 'public/sitemap.xml'), 'utf8');
 const NOINDEX = ['/cart', '/checkout', '/success', '/login', '/register', '/account'];
+const locs = [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)].map((m) => m[1].trim());
+
+// Derive the origin from the sitemap itself rather than a second hardcoded
+// constant. The sitemap is the input being parsed here, so its origin is the
+// only authority that cannot drift out of sync with it. Previously this script
+// held its own SITE_URL default, which silently desynced when the sitemap
+// generator's default changed: every route kept its full "https://…" prefix,
+// Chromium rejected all 484 as "Cannot navigate to invalid URL", and prerender
+// produced a single stub index.html while the build still reported success.
+const origin = new URL(locs[0] ?? SITE_URL).origin;
+if (!locs.every((loc) => loc.startsWith(origin))) {
+  throw new Error(
+    `sitemap.xml mixes origins (expected all <loc> under ${origin}). ` +
+      `Regenerate it with the same SITE_URL: npm run sitemap`,
+  );
+}
+
 const routes = [...new Set(
-  [...sitemap.matchAll(/<loc>(.*?)<\/loc>/g)]
-    .map((m) => m[1].replace(SITE_URL, '').split('?')[0])
+  locs
+    .map((loc) => loc.slice(origin.length).split('?')[0])
+    .filter((r) => r.startsWith('/'))
     .filter((r) => !NOINDEX.some((n) => r === n || r.startsWith(n + '/'))),
 )];
-console.log(`Prerendering ${routes.length} pathname routes with concurrency ${CONCURRENCY}…`);
+console.log(`Prerendering ${routes.length} pathname routes from ${origin} with concurrency ${CONCURRENCY}…`);
 
 // ---------- servers ----------
 const dbg = (msg) => appendFileSync('/tmp/rr-prerender-debug.log', `${new Date().toISOString()} ${msg}\n`);

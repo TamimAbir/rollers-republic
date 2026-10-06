@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
     branches: [main]
 
@@ -26,7 +26,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version-file: '.nvmrc'
           cache: 'npm'
           cache-dependency-path: app/package-lock.json
 
@@ -59,7 +59,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version-file: '.nvmrc'
           cache: 'npm'
           cache-dependency-path: app/package-lock.json
 
@@ -87,7 +87,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version-file: '.nvmrc'
           cache: 'npm'
           cache-dependency-path: app/package-lock.json
 
@@ -95,8 +95,10 @@ jobs:
         run: npm ci
 
       - name: Audit dependencies (high+)
+        # Gating, not advisory: a high-severity advisory in the shipped dependency
+        # tree must fail the pipeline. (This step previously ran with
+        # continue-on-error: true, so it could never fail anything.)
         run: npm audit --audit-level=high
-        continue-on-error: true
 
   reference-api:
     runs-on: ubuntu-latest
@@ -106,7 +108,7 @@ jobs:
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20.x'
+          node-version-file: '.nvmrc'
 
       - name: Run reference API tests (zero-dependency server)
         working-directory: ./server

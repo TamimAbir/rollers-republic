@@ -1,0 +1,8 @@
+# Node version pinned for local development AND consumed by CI
+# (see .github/workflows/ci.yml -> actions/setup-node with node-version-file).
+#
+# Why this file exists: Node >= 24 exposes an experimental Web Storage global
+# whose unconfigured accessor shadows jsdom's localStorage inside Vitest.
+# That is handled in app/src/test/setup.ts, but staying on the tested major
+# keeps the local run and the CI run byte-for-byte comparable.
+20

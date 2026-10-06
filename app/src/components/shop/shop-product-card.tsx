@@ -83,10 +83,12 @@ export function ShopProductCard({ product, index, onAddToCart }: ShopProductCard
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-[10px] uppercase tracking-[0.3em] text-white/60 font-black">{product.category}</span>
-              <div className="flex items-center gap-1">
-                <Star className="w-3 h-3 text-primary fill-primary" />
-                <span className="text-[10px] text-white/60 font-bold tabular-nums">{product.rating}</span>
-              </div>
+              {(product.reviewCount ?? 0) > 0 && (
+                <div className="flex items-center gap-1">
+                  <Star className="w-3 h-3 text-primary fill-primary" />
+                  <span className="text-[10px] text-white/60 font-bold tabular-nums">{product.rating}</span>
+                </div>
+              )}
             </div>
             <Link to={`/product/${product.slug}`}>
               <h3 className="text-xl font-display font-black text-white tracking-tight leading-tight group-hover:text-primary transition-colors">

@@ -48,6 +48,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
+    // Node >= 24 ships an experimental Web Storage global that shadows jsdom's
+    // and returns undefined, breaking every storage-backed store test. This
+    // setup file restores jsdom's implementation — see src/test/setup.ts.
+    setupFiles: ['./src/test/setup.ts'],
     exclude: [
       '**/node_modules/**',
       '**/dist/**',

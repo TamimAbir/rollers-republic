@@ -19,6 +19,7 @@
  * crawl budget); the count is printed either way.
  */
 import { readFileSync, writeFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -27,17 +28,30 @@ const appDir = resolve(__dirname, '..');
 const rootDir = resolve(appDir, '..');
 const outFile = resolve(appDir, 'public/sitemap.xml');
 
-const SITE_URL = process.env.SITE_URL || 'https://rollerspub.com';
+const SITE_URL =
+  process.env.SITE_URL || 'https://rollers-republic.vercel.app';
 
 // --- Load the canonical catalog (server/seed.json is the SSOT) ---
 const seed = JSON.parse(readFileSync(resolve(rootDir, 'server', 'seed.json'), 'utf8'));
 const { products, categories, brands } = seed;
 
+// --- lastmod: last commit date of the SSOT seed (all catalog URLs share it) ---
+let seedLastmod;
+try {
+  seedLastmod = execFileSync(
+    'git',
+    ['log', '-1', '--format=%cI', '--', 'server/seed.json'],
+    { encoding: 'utf8', cwd: rootDir },
+  ).trim().slice(0, 10) || undefined; // W3C date (YYYY-MM-DD)
+} catch {
+  seedLastmod = undefined; // no git metadata (tarball builds) — omit lastmod
+}
+
 // --- Helpers ---
-const esc = (s) =>
-  String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-const url = (path, { priority, changefreq = 'weekly' }) =>
-  `  <url><loc>${SITE_URL}${path}</loc><changefreq>${changefreq}</changefreq><priority>${priority}</priority></url>`;
+const url = (path, { priority, changefreq = 'weekly', lastmod = seedLastmod }) =>
+  `  <url><loc>${SITE_URL}${path}</loc><changefreq>${changefreq}</changefreq><priority>${priority}</priority>${
+    lastmod ? `<lastmod>${lastmod}</lastmod>` : ''
+  }</url>`;
 
 // --- URLs ---
 const urls = [

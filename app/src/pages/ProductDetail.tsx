@@ -220,24 +220,28 @@ export function ProductDetail() {
                 </h1>
 
                 <div className="flex items-center gap-6">
-                  <div className="flex items-center gap-1.5">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        className={cn(
-                          "w-5 h-5",
-                          i < Math.floor(product.rating)
-                            ? "text-primary fill-primary"
-                            : "text-white/30 fill-white/30"
-                        )}
-                      />
-                    ))}
-                    <span className="ml-2 text-white/60 font-medium">{product.rating}</span>
-                  </div>
-                  <Separator orientation="vertical" className="h-4 bg-white/10" />
-                  <span className="text-white/60 font-medium tracking-wide">
-                    {product.reviewCount} <span className="text-xs uppercase ml-1">Reviews</span>
-                  </span>
+                  {product.reviewCount > 0 && (
+                    <>
+                      <div className="flex items-center gap-1.5">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className={cn(
+                              "w-5 h-5",
+                              i < Math.floor(product.rating)
+                                ? "text-primary fill-primary"
+                                : "text-white/30 fill-white/30"
+                            )}
+                          />
+                        ))}
+                        <span className="ml-2 text-white/60 font-medium">{product.rating}</span>
+                      </div>
+                      <Separator orientation="vertical" className="h-4 bg-white/10" />
+                      <span className="text-white/60 font-medium tracking-wide">
+                        {product.reviewCount} <span className="text-xs uppercase ml-1">Reviews</span>
+                      </span>
+                    </>
+                  )}
                 </div>
               </div>
 

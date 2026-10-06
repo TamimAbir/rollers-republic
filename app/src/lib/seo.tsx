@@ -14,7 +14,8 @@ interface SEOConfig {
   noindex?: boolean;
 }
 
-const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://rollerspub.com';
+const SITE_URL =
+  import.meta.env.VITE_SITE_URL || 'https://rollers-republic.vercel.app';
 
 const upsertMetaTag = (selector: string, attributes: Record<string, string>) => {
   let tag = document.head.querySelector<HTMLMetaElement>(selector);
@@ -117,11 +118,32 @@ export const buildProductJsonLd = (product: Product, canonicalPath: string): Rec
     availability: product.inStock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
     url: `${SITE_URL}${canonicalPath}`,
   },
-  aggregateRating: {
-    '@type': 'AggregateRating',
-    ratingValue: product.rating,
-    reviewCount: product.reviewCount,
-  },
+  // Only ship a rating when real reviews back it — the synthetic 4.5/0-review
+  // default must not become structured data (Google rich-result spam risk).
+  ...(product.reviewCount > 0
+    ? {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: product.rating,
+          reviewCount: product.reviewCount,
+        },
+      }
+    : {}),
+});
+
+/** BreadcrumbList (SEO-AUDIT gap): trail from home to the current page. */
+export const buildBreadcrumbJsonLd = (
+  trail: { name: string; path: string }[],
+): Record<string, unknown> => ({
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: trail.map((crumb, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    name: crumb.name,
+    // Google omits `item` for the current (last) entry.
+    ...(index < trail.length - 1 ? { item: `${SITE_URL}${crumb.path}` } : {}),
+  })),
 });
 
 export function useDocumentSEO({
@@ -135,8 +157,9 @@ export function useDocumentSEO({
   noindex = false,
 }: SEOConfig) {
   // SEO-AUDIT fix #2: default to the raster brand card (SVG is not renderable
-  // by Facebook/WhatsApp link previews) and sanitize SVG product images for
-  // the same reason.
+  // by Facebook/WhatsApp link previews). Product photos under /img/* are
+  // same-origin (proxied server-side) and render fine in link previews —
+  // only SVG sources are swapped for the default card.
   const DEFAULT_OG_IMAGE = '/images/og-image.png';
   const ogImage =
     image && !/\.svg(\?|$)/i.test(image) ? image : DEFAULT_OG_IMAGE;

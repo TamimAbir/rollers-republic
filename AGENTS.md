@@ -3,7 +3,7 @@
 ## Project Overview
 - **Repository**: Rollers Republic storefront (React 19, TypeScript, Vite, Tailwind CSS, Framer Motion, React Router v7)
 - **Backend**: Reference API server in `server/` (zero-dependency Node, implements `docs/API.md`)
-- **Testing**: Vitest unit (106 tests) + Playwright E2E (storeflow, accessibility) + node:test server integration (23 tests)
+- **Testing**: Vitest unit (132 tests) + Playwright E2E (storeflow, accessibility) + node:test server integration (37 tests)
 
 ## Development Workflow
 
@@ -18,10 +18,10 @@ npm run dev
 ```bash
 cd app
 npm run lint     # ESLint — zero errors required
-npm test -- --run  # Vitest — 115 tests required
+npm test -- --run  # Vitest — 132 tests required
 npm run test:coverage  # Coverage thresholds: 84/75/80/84 (stmts/branch/funcs/lines)
-npm run build   # TypeScript + Vite
-npm run test:e2e  # Playwright storeflow + accessibility (21 tests)
+npm run build   # TypeScript + Vite + prerender
+npm run test:e2e  # Playwright storeflow + accessibility
 npm run test:e2e:degraded  # Degraded-mode: remote API down → banner + fallback
 
 # If the reference API server changed:
@@ -75,14 +75,18 @@ This policy exists because a past session deleted two app components while
 keeping 11 primitives + 10 hooks with contradictory reasoning. Write the rule
 down; apply it uniformly.
 
-## Current Status (September 2026)
+## Current Status (October 2026)
 - **Version**: 1.0.0 (Rollers Republic — see docs/SSOT.md before working on this repo)
-- **Tests**: 120 unit (Vitest, incl. AgeGate) + E2E (Playwright: storeflow + a11y on 13 routes) + 2 degraded-mode E2E + 28 server integration (node:test) + 4 seed-injection tests
+- **Node**: pinned to the `.nvmrc` major (20) for local + CI parity. The suite is
+  *also* hardened to run on Node >= 24, whose experimental Web Storage global
+  otherwise shadows jsdom's `localStorage` (see `app/src/test/setup.ts`).
+- **Tests**: 132 unit (Vitest, incl. AgeGate + SEO/breadcrumb JSON-LD) + E2E (Playwright: storeflow + a11y) + degraded-mode E2E + 37 server integration (node:test, incl. seed injection)
 - **Coverage**: ~88% statements (thresholds: 84/75/80/84)
 - **Lint**: 0 errors
-- **Build**: Passing
-- **Accessibility**: automated axe-core WCAG 2.1 AA scan in E2E suite (13 routes)
-- **SEO/prerender**: 484 routes static-prerendered at build (`npm run build` → `app/scripts/prerender.mjs`); 574-URL sitemap; per-page meta; Product + LocalBusiness JSON-LD
+- **Build**: Passing (`tsc -b` + Vite + prerender)
+- **Audit**: 0 vulnerabilities (`npm audit`, all severities)
+- **Accessibility**: automated axe-core WCAG 2.1 AA scan in E2E suite
+- **SEO/prerender**: 484 routes static-prerendered at build (`npm run build` → `app/scripts/prerender.mjs`); 574-URL sitemap; per-page meta; Product + LocalBusiness + BreadcrumbList JSON-LD; `aggregateRating` suppressed when `reviewCount` is 0
 - **Production API**: reference API deployed as Vercel serverless function (`api/store.js`, `/api/*` rewrite); live site talks to real backend same-origin
 - **Catalog**: 949 real products / 8 categories / 82 brands snapshotted from the client's WooCommerce Store API into `server/seed.json` — the data SSOT. The client's fallback dataset (`app/src/data/catalog.ts`) is generated from it at build time (`app/scripts/generate-catalog.mjs`, wired via `predev`/`prebuild`; CI gates drift with `--check`). Refresh via `app/scripts/fetch-catalog.mjs`.
 

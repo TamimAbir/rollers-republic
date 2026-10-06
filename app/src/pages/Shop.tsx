@@ -15,7 +15,8 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ProductSkeleton } from '@/components/ui/ProductSkeleton';
 import { ShopProductCard } from '@/components/shop/shop-product-card';
-import { useDocumentSEO } from '@/lib/seo';
+import { Breadcrumbs, type Crumb } from '@/components/shop/Breadcrumbs';
+import { useDocumentSEO, buildBreadcrumbJsonLd } from '@/lib/seo';
 
 
 export function Shop() {
@@ -113,6 +114,27 @@ export function Shop() {
   const seoQuery = selectedBrandSlug || selectedCategoryId
     ? `${seoTitleParts.join(' ')} in Dhaka`
     : 'Rolling Papers, Bongs & Vapes in Dhaka';
+
+  // Breadcrumb trail (UI + BreadcrumbList JSON-LD) — mirrors active filters.
+  const crumbs = useMemo(() => {
+    const trail: Crumb[] = [
+      { name: 'Home', path: '/' },
+      { name: 'Shop', path: '/shop' },
+    ];
+    if (selectedCategory !== 'all') {
+      const cat = categories.find((c) => c.slug === selectedCategory);
+      if (cat) trail.push({ name: cat.name, path: `/shop?category=${cat.slug}` });
+    }
+    if (selectedBrandSlug) {
+      trail.push({ name: selectedBrand?.name ?? selectedBrandSlug, path: `/shop?brand=${selectedBrandSlug}` });
+    }
+    return trail;
+  }, [categories, selectedCategory, selectedBrandSlug, selectedBrand?.name]);
+  const breadcrumbJsonLd = useMemo(
+    () => (crumbs.length > 2 ? buildBreadcrumbJsonLd(crumbs) : undefined),
+    [crumbs],
+  );
+
   useDocumentSEO({
     title: `Shop ${seoQuery}`,
     description: `Browse ${selectedBrand?.name ?? 'our'} authentic ${(
@@ -120,6 +142,7 @@ export function Shop() {
     ).toLowerCase()} imported from the UK. Same-day delivery in Dhaka, prices in ৳.`,
     canonicalPath: '/shop',
     keywords: `shop ${selectedBrand?.name ?? 'smoking accessories'} bangladesh, ${seoQuery.toLowerCase()}, online headshop dhaka`,
+    jsonLd: breadcrumbJsonLd,
   });
 
   return (
@@ -133,6 +156,9 @@ export function Shop() {
       <div className="relative z-10">
         {/* Curated Header */}
         <section className="relative py-20 lg:py-32 overflow-hidden px-4 sm:px-6 lg:px-12 xl:px-20">
+          <div className="max-w-7xl mx-auto">
+            <Breadcrumbs trail={crumbs} />
+          </div>
           <div className="max-w-4xl mx-auto text-center space-y-8">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
