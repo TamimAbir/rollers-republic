@@ -1,21 +1,52 @@
 # SEO & Performance Audit — Rollers Republic Storefront
 
-**Date:** 2026-09-22 · **Method:** Lighthouse 13 (mobile, throttled), production build (`npm run build` → `vite preview`), plus manual inspection of meta/sitemap/robots/headers. Home and Shop audited.
+**Date:** 2026-10-06 (re-run, post-SEO-fixes) · **Previous run:** 2026-09-22
+**Method:** Lighthouse 13.5.0 (mobile, throttled: 150ms RTT / 1.6Mbps / 4x CPU
+slowdown, plus desktop), production build (`npm run build` -> `vite preview` on
+:4173), Chromium 149. Home and Shop audited.
 
----
+## 1. Scorecard — 2026-10-06 (current)
 
-## 1. Scorecard
+| Page | Form factor | Performance | SEO | Best Practices | Accessibility | Key metrics |
+|------|------------|-------------|-----|----------------|---------------|-------------|
+| `/` | mobile | **66** | **100** | **100** | **100** | FCP 3.5s · LCP **10.7s** · CLS 0.075 · TBT 30ms |
+| `/shop` | mobile | **49** | **100** | **100** | 99 | FCP 3.5s · LCP **10.3s** · CLS 0.412 · TBT 20ms |
+| `/` | desktop | **86** | **100** | **100** | **100** | FCP 0.7s · LCP 2.2s · CLS 0.026 · TBT 0ms |
+| `/shop` | desktop | **79** | **100** | **100** | 99 | FCP 0.7s · LCP 2.2s · CLS 0.202 · TBT 0ms |
+
+**What the fixes bought (2026-09-22 -> 2026-10-06):**
+- SEO **100** on both pages, all form factors (per-page titles, canonicals,
+  574-URL sitemap, LocalBusiness + BreadcrumbList JSON-LD).
+- Accessibility **100** on home; SEO/Best-Practices 100 everywhere.
+- Home CLS **0.303 -> 0.026** (desktop) — the web-font reflow is gone.
+- `aggregateRating` is now omitted when `reviewCount` is 0.
+
+**Open performance problem — mobile LCP ~10s.** Root cause is product imagery,
+not JavaScript. The heaviest single transfer is
+`alien-go-cotton-filter-tips-pack-of-200.png` at **2.4 MB** (1024x1536 RGBA PNG);
+12 product images exceed 500 KB and `app/public/images/products/` totals **15 MB**
+across 70 files. A control run with that one image removed still measured LCP
+9.8s (and CLS worsened to 0.411), so it is a *class* of problem, not one file.
+Desktop is unaffected (LCP 2.2s, TBT 0ms), so this is specifically mobile-network
+bound. Fix: convert product PNG/JPEG to WebP/AVIF, serve responsive `srcset`, and
+lazy-load below-the-fold grids.
+
+**Consequence for sales claims:** the storefront must not be marketed as
+"sub-second on mobile". Its defensible advantages are prerendered HTML for
+crawlers/link previews, zero WordPress plugin payload, and per-page SEO.
+
+## 2. Previous scorecard (2026-09-22, superseded)
 
 | Page | Performance | SEO | Best Practices | Accessibility | Key metrics |
 |------|------------|-----|----------------|---------------|-------------|
 | `/` (Home) | **71** | **100** | **100** | **100** | FCP 2.4s · LCP **3.7s** · **CLS 0.303** · TBT 50ms · SI 2.4s |
 | `/shop` | **85** | **100** | — | — | LCP 3.4s · CLS 0.007 |
 
-**Already excellent:** accessibility (100), best-practices (100), security headers + CSP, TBT 50ms (no main-thread jank), route-level code splitting (82KB gz main, vendors isolated), lazy routes, image `onError` fallbacks.
-
 ---
 
-## 2. What the audit found
+## 3. Findings from the 2026-09-22 run (historical — S1/S2/S3/S5 now fixed)
+
+
 
 ### SEO — structure is right, but coverage is thin
 

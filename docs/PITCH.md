@@ -14,8 +14,8 @@ design that finally matches the quality of what you sell. It's ready to demo tod
 
 ## Live demo
 
-> Deploy link goes here — one Vercel click away. The demo ships with your live catalog
-> snapshot: RAW, Elements, Juicy Jays, OCB, Phoenix, G-RollZ and 76 more brands.
+> **https://rollers-republic.vercel.app** — live now, serving a snapshot of your real
+> catalog: RAW, Elements, Juicy Jays, OCB, Phoenix, G-RollZ and 77 more brands.
 
 > **Self-contained HTML version:** this proposal also exists as a single shareable file
 > with the buyer-flow screenshots embedded — `docs/pitch.html` (rebuild after UI changes
@@ -25,27 +25,30 @@ design that finally matches the quality of what you sell. It's ready to demo tod
 
 | Feature | Detail |
 |---|---|
-| **Your real catalog** | 949 products, 8 categories, 82 brands — snapshotted from your own store, prices in ৳ |
-| **Blazing fast** | Static-first React app — pages paint in well under a second, even on mobile data |
+| **Your real catalog** | 949 products, 8 categories, 83 brands — snapshotted from your own store, prices in ৳ |
+| **Static-prerendered** | 484 routes build to real HTML — content, prices and product data arrive in the first response, no JavaScript required |
 | **18+ Age Gate** | Adult verification on entry, with a compliance-ready age policy page |
 | **Built for your sales flow** | "Order online → call 01330005300" express-delivery banner, WhatsApp ordering, bKash + Cash on Delivery |
 | **Both outlets on the map** | Dhanmondi flagship + Mirpur with Google Maps directions |
 | **Shop by brand** | Dedicated brand pages — a thing your current site can't do |
 | **Search & filters** | Instant search, category + brand + price filtering, sorting |
-| **Google-review ready** | Testimonial section framed for your existing review reputation |
+| **Google-review ready** | Testimonial section ready — drops in your real reviews, no fabricated ratings |
 | **Mobile-first, WCAG AA accessible** | Works beautifully for every customer, on every device |
 | **Secure by default** | Hardened security headers, no plugins to update, no WordPress to hack |
 
 ## Why upgrade from WordPress?
 
-1. **Speed = sales.** Every second of load time costs conversions. This app ships ~80KB
-   of gzipped JavaScript vs. the megabytes of WordPress theme + plugin payload.
+1. **Speed = sales.** Every second of load time costs conversions. 484 routes are
+   prerendered to real HTML at build time, so your catalog is readable by search
+   engines and link-preview scrapers that never run JavaScript — and no plugin
+   payload loads on every page.
 2. **Zero maintenance overhead.** No plugin updates, no theme conflicts, no database
    to harden. Deploy is a git push.
 3. **Your catalog, automated.** A one-command snapshot pipeline keeps product data in
    sync with your WooCommerce backend — or we retire WooCommerce entirely.
 4. **Own your stack.** Clean, documented, version-controlled code with an
-   enterprise-grade test suite (148 automated tests, 88% coverage, CI on every change).
+   enterprise-grade test suite (205 automated tests: 144 unit, 37 API integration,
+   24 end-to-end including accessibility; CI on every change).
 
 ## Engagement options
 
@@ -68,4 +71,4 @@ design that finally matches the quality of what you sell. It's ready to demo tod
 *Demo note: the proposal build uses Rollers Republic's public catalog data and product
 imagery for demonstration purposes only; ownership and usage transfer with engagement.*
 
-**Contact:** [your name] · [your email] · Built with love by two brothers who know this market.
+**Contact:** Tamim Abir · Fahad Ibrahim · Hope Theory — two brothers building for Dhaka.
