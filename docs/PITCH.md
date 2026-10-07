@@ -47,7 +47,7 @@ design that finally matches the quality of what you sell. It's ready to demo tod
 3. **Your catalog, automated.** A one-command snapshot pipeline keeps product data in
    sync with your WooCommerce backend — or we retire WooCommerce entirely.
 4. **Own your stack.** Clean, documented, version-controlled code with an
-   enterprise-grade test suite (205 automated tests: 144 unit, 37 API integration,
+   enterprise-grade test suite (212 automated tests: 151 unit, 37 API integration,
    24 end-to-end including accessibility; CI on every change).
 
 ## Engagement options

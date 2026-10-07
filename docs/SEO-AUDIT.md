@@ -7,42 +7,60 @@ slowdown, plus desktop), production build (`npm run build` -> `vite preview` on
 
 ## 1. Scorecard — 2026-10-06 (current)
 
-| Page | Form factor | Performance | SEO | Best Practices | Accessibility | Key metrics |
-|------|------------|-------------|-----|----------------|---------------|-------------|
-| `/` | mobile | **66** | **100** | **100** | **100** | FCP 3.5s · LCP **10.7s** · CLS 0.075 · TBT 30ms |
-| `/shop` | mobile | **49** | **100** | **100** | 99 | FCP 3.5s · LCP **10.3s** · CLS 0.412 · TBT 20ms |
-| `/` | desktop | **86** | **100** | **100** | **100** | FCP 0.7s · LCP 2.2s · CLS 0.026 · TBT 0ms |
-| `/shop` | desktop | **79** | **100** | **100** | 99 | FCP 0.7s · LCP 2.2s · CLS 0.202 · TBT 0ms |
+Lighthouse 13.5.0, Chromium 149, mobile throttled (150ms RTT / 1.6Mbps / 4x CPU
+slowdown) and desktop, against the production build (`npm run build` ->
+`vite preview`).
 
-**What the fixes bought (2026-09-22 -> 2026-10-06):**
-- SEO **100** on both pages, all form factors (per-page titles, canonicals,
-  574-URL sitemap, LocalBusiness + BreadcrumbList JSON-LD).
-- Accessibility **100** on home; SEO/Best-Practices 100 everywhere.
-- Home CLS **0.303 -> 0.026** (desktop) — the web-font reflow is gone.
-- `aggregateRating` is now omitted when `reviewCount` is 0.
+| Page | Form factor | Perf | SEO | Best Practices | A11y | LCP | CLS | TBT |
+|------|-------------|------|-----|----------------|------|-----|-----|-----|
+| `/` | mobile | **68** | **100** | **100** | **100** | 7.7s | 0.026 | 10ms |
+| `/shop` | mobile | **67** | **100** | **100** | 99 | 7.6s | 0.078 | 10ms |
+| `/` | desktop | 86 | **100** | **100** | **100** | 2.2s | 0.026 | 0ms |
+| `/shop` | desktop | 79 | **100** | **100** | 99 | 2.2s | 0.202 | 0ms |
 
-**Open performance problem — mobile LCP ~10s.** Root cause is product imagery,
-not JavaScript. The heaviest single transfer is
-`alien-go-cotton-filter-tips-pack-of-200.png` at **2.4 MB** (1024x1536 RGBA PNG);
-12 product images exceed 500 KB and `app/public/images/products/` totals **15 MB**
-across 70 files. A control run with that one image removed still measured LCP
-9.8s (and CLS worsened to 0.411), so it is a *class* of problem, not one file.
-Desktop is unaffected (LCP 2.2s, TBT 0ms), so this is specifically mobile-network
-bound. Fix: convert product PNG/JPEG to WebP/AVIF, serve responsive `srcset`, and
-lazy-load below-the-fold grids.
+### What changed across this session
 
-**Consequence for sales claims:** the storefront must not be marketed as
-"sub-second on mobile". Its defensible advantages are prerendered HTML for
-crawlers/link previews, zero WordPress plugin payload, and per-page SEO.
+**SEO work (commit `122c9af`).** `useDocumentSEO` is wired into Home, Shop,
+About, Contact and Success, each with its own title, description and canonical.
+Sitemap went from 4 URLs to 574. LocalBusiness + BreadcrumbList JSON-LD added
+(BreadcrumbList suppressed on the final crumb per Google). `aggregateRating` is
+omitted when `reviewCount` is 0, so the synthetic 4.5 default can no longer reach
+structured data. SEO and best-practices have been 100 ever since.
 
-## 2. Previous scorecard (2026-09-22, superseded)
+**Image weight (commit `8940af5`).** The storefront shipped 17MB of imagery:
+56 raster files, 12 over 500KB, worst a 2.4MB PNG. That weight — not
+JavaScript — was the mobile bottleneck (desktop was already 2.2s with 0ms TBT).
 
-| Page | Performance | SEO | Best Practices | Accessibility | Key metrics |
-|------|------------|-----|----------------|---------------|-------------|
-| `/` (Home) | **71** | **100** | **100** | **100** | FCP 2.4s · LCP **3.7s** · **CLS 0.303** · TBT 50ms · SI 2.4s |
-| `/shop` | **85** | **100** | — | — | LCP 3.4s · CLS 0.007 |
+| | home LCP | home CLS | home perf | shop LCP | shop CLS | shop perf |
+|---|---|---|---|---|---|---|
+| before | 10.7s | 0.075 | 66 | 10.3s | 0.412 | 49 |
+| after | **7.7s** | **0.026** | **68** | **7.6s** | **0.078** | **67** |
 
----
+`scripts/optimize-images.mjs` converts anything over 80KB to WebP via
+ffmpeg/libwebp at q78 (23 assets, 14.2MB -> 1.5MB of served imagery; the 2.4MB
+PNG is now 279KB). `optimizedImage()` is wired into all five components that
+render product imagery, each with `width`/`height`, `loading` and `decoding`
+hints; the hero also got its intrinsic 1024x1536.
+
+### Remaining performance work
+
+Mobile LCP is 7.7s, still above the 2.5s "good" threshold. What is left:
+
+1. `hero-product.webp` is 476KB and is the largest remaining transfer. Resize to
+   the actual rendered size and ship a `srcset`.
+2. The remaining un-optimized rasters (19 under the 80KB threshold) and
+   `features-lifestyle.jpg` (67KB) would still benefit from WebP.
+3. Category tiles are `loading="lazy"` but sit in the first viewport — verify
+   they are not delaying the hero.
+
+### Consequence for sales claims
+
+The storefront must not be marketed as "sub-second on mobile" — that is not
+true at any point in this measurement history. Its defensible advantages are:
+484 routes prerendered to real HTML at build time (crawlers and WhatsApp/Facebook
+link previews get content without running JS), no WordPress plugin payload,
+SEO/best-practices 100, WCAG 2.1 AA enforced in CI, and a 15MB lighter image
+payload than it shipped this morning.
 
 ## 3. Findings from the 2026-09-22 run (historical — S1/S2/S3/S5 now fixed)
 

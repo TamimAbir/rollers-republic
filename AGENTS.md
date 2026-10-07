@@ -3,7 +3,7 @@
 ## Project Overview
 - **Repository**: Rollers Republic storefront (React 19, TypeScript, Vite, Tailwind CSS, Framer Motion, React Router v7)
 - **Backend**: Reference API server in `server/` (zero-dependency Node, implements `docs/API.md`)
-- **Testing**: Vitest unit (144 tests) + Playwright E2E (storeflow, accessibility) + node:test server integration (37 tests)
+- **Testing**: Vitest unit (151 tests) + Playwright E2E (storeflow, accessibility) + node:test server integration (37 tests)
 
 ## Development Workflow
 
@@ -18,7 +18,7 @@ npm run dev
 ```bash
 cd app
 npm run lint     # ESLint — zero errors required
-npm test -- --run  # Vitest — 144 tests required
+npm test -- --run  # Vitest — 151 tests required
 npm run test:coverage  # Coverage thresholds: 84/75/80/84 (stmts/branch/funcs/lines)
 npm run build   # TypeScript + Vite + prerender
 npm run test:e2e  # Playwright storeflow + accessibility
@@ -80,7 +80,7 @@ down; apply it uniformly.
 - **Node**: pinned to the `.nvmrc` major (20) for local + CI parity. The suite is
   *also* hardened to run on Node >= 24, whose experimental Web Storage global
   otherwise shadows jsdom's `localStorage` (see `app/src/test/setup.ts`).
-- **Tests**: 144 unit (Vitest, incl. AgeGate + SEO/breadcrumb JSON-LD) + E2E (Playwright: storeflow + a11y) + degraded-mode E2E + 37 server integration (node:test, incl. seed injection)
+- **Tests**: 151 unit (Vitest, incl. AgeGate + SEO/breadcrumb JSON-LD) + E2E (Playwright: storeflow + a11y) + degraded-mode E2E + 37 server integration (node:test, incl. seed injection)
 - **Coverage**: ~88% statements (thresholds: 84/75/80/84)
 - **Lint**: 0 errors
 - **Build**: Passing (`tsc -b` + Vite + prerender)
