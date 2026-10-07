@@ -55,3 +55,4 @@ test-results/
 
 # Generated pitch deck (rebuild with: node docs/scripts/build-pitch.mjs)
 docs/pitch.html
+\n# Product imagery: WebP variants + manifest are build artifacts of\n# `npm run optimize:images` (ffmpeg/libwebp). The originals in\n# public/images are the source of truth and stay tracked.\napp/public/images/products/*.webp\napp/public/images/products/image-manifest.json\napp/src/data/image-variants.ts\n

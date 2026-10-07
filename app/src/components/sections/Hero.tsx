@@ -306,8 +306,11 @@ export function Hero() {
                   <img
                     src="/images/hero-product.jpg"
                     alt="Rollers Republic — premium smoking accessories"
+                    width={1024}
+                    height={1536}
                     loading="eager"
                     fetchPriority="high"
+                    decoding="async"
                     className="w-full h-auto filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.5)] transition-transform duration-700 group-hover:scale-105"
                     onError={(e) => {
                       (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="700" viewBox="0 0 600 700"%3E%3Crect fill="%23111" width="600" height="700" rx="40"/%3E%3Ctext fill="%23D4AF37" font-family="sans-serif" font-size="32" font-weight="black" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3EROLLERS REPUBLIC%3C/text%3E%3C/svg%3E';

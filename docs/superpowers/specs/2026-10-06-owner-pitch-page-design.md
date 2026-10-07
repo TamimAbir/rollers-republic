@@ -23,29 +23,34 @@ Verified-this-session facts that MAY be claimed:
 
 | Claim | Evidence |
 |---|---|
-| 949 products / 8 categories / 82 brands | `server/seed.json` |
+| 949 products / 8 categories / 83 brands | `server/seed.json` |
 | 484 routes prerendered at build | `find dist -name '*.html'` → 484 |
-| 234 KB gzipped JS total | measured over `dist/assets/*.js` via gzip -9 |
-| 132 unit + 37 server tests, 13 a11y routes green | real command output |
+| 239 KB gzipped JS total | measured over `dist/assets/*.js` via gzip -9 |
+| 144 unit + 37 server + 24 E2E (incl. axe-core a11y) = 205 | real command output |
 | 0 known dependency vulnerabilities | `npm audit` → 0 |
 | Their live WordPress site errors for crawlers | `web_extract` on rollerspub.com → 500 |
 
 Facts that MUST NOT appear (research found conflicts):
 
-- **`phoneAlt`** — official site says `01711626205`; our config says
-  `01711626210`. Last digit differs. Use the official value, or omit entirely.
-- **Second outlet name** — Instagram says Basundhara, a Facebook post says
-  Mirpur, our SSOT lists the address as an open question. Say "your Dhanmondi
-  flagship" and nothing about the second branch.
-- **Test totals** — old pitch claimed "205 automated tests: 144 unit". Actual is
-  183 (132 + 37 + 14). Use the verified split, or non-numeric phrasing.
-- **"100 Lighthouse accessibility"** — never re-run in this session. Claim
-  axe-core WCAG 2.1 AA instead; that IS verified.
+- **`phoneAlt`** — RESOLVED 2026-10-06: official site is `01711626205`; config had
+  `01711626210`. Corrected in config.ts, SSOT.md and SEO-AUDIT.md. Client has
+  confirmed permission to use their catalog and imagery.
+- **Second outlet name** — STILL UNCONFIRMED. Instagram says Basundhara, a Facebook
+  post says Mirpur; their contact page lists only the Dhanmondi showroom. The
+  client has not confirmed it. Keep "your Dhanmondi flagship" and omit the second
+  branch until they say which it is.
+- **Test totals** — verified split is 205 (144 unit + 37 API integration + 24 E2E).
+  An earlier note here claimed 183 (132+37+14); that was wrong — `vitest --run`
+  reports 144 and the server suite 37. Use the verified split.
+- **"100 Lighthouse accessibility"** — Lighthouse WAS re-run on 2026-10-06 (13.5.0):
+  a11y 100 on home / 99 on shop, SEO 100, best-practices 100. The caveat is
+  performance: mobile LCP is 10.7s because of image weight (15MB across 70
+  product images). Never claim a sub-second mobile load.
 - **Market-size statistics** — do not quote figures from secondary sources
   (ECDB/Scribd/Statista) to a business owner. Not needed; cuts credibility.
 
-Two placeholders ship marked `TODO-OWNER-CONFIRM` for the user to fill in 30s
-before sending.
+Permission to use the client's real catalog and imagery in this proposal was
+granted by the client (2026-10-06), so the demo ships with their live data.
 
 ## 3. Structure — six sections in the owner's order of caring
 

@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { buildProductJsonLd, useDocumentSEO } from '@/lib/seo';
 import { toast } from 'sonner';
+import { optimizedImage } from '@/data/image-variants';
 
 export function ProductDetail() {
   const { slug } = useParams<{ slug: string }>();
@@ -128,8 +129,13 @@ export function ProductDetail() {
               <div className="group relative aspect-[4/5] sm:aspect-square bg-white/[0.02] border border-white/5 rounded-[2.5rem] overflow-hidden backdrop-blur-3xl shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
                 <img
-                  src={product.image}
+                  src={optimizedImage(product.image)}
                   alt={product.name}
+                  width={600}
+                  height={600}
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
                   onError={(e) => {
                     (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600"%3E%3Crect fill="%23111" width="600" height="600"/%3E%3Ctext fill="%23D4AF37" font-family="sans-serif" font-size="32" font-weight="bold" x="50%25" y="50%25" text-anchor="middle" dominant-baseline="middle"%3ERollers Republic%3C/text%3E%3C/svg%3E';
@@ -384,8 +390,12 @@ export function ProductDetail() {
                   <Link to={`/product/${related.slug}`} className="group block space-y-4">
                     <div className="aspect-[4/5] bg-white/[0.03] border border-white/5 rounded-3xl overflow-hidden shadow-xl">
                       <img
-                        src={related.image}
+                        src={optimizedImage(related.image)}
                         alt={related.name}
+                        width={300}
+                        height={300}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="300" height="300" viewBox="0 0 300 300"%3E%3Crect fill="%231a1a1a" width="300" height="300"/%3E%3C/svg%3E';

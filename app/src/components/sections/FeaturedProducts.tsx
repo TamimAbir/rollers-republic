@@ -8,6 +8,7 @@ import { formatPrice, cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ProductSkeleton } from '@/components/ui/ProductSkeleton';
+import { optimizedImage } from '@/data/image-variants';
 
 export function FeaturedProducts() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -102,8 +103,12 @@ export function FeaturedProducts() {
                       isLarge ? "aspect-[16/9] sm:aspect-square lg:aspect-[16/9]" : "aspect-[4/5]"
                     )}>
                       <img
-                        src={product.image}
+                        src={optimizedImage(product.image)}
                         alt={product.name}
+                        width={800}
+                        height={800}
+                        loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-[1.5s] ease-out group-hover:scale-110"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="800" height="800"%3E%3Crect fill="%23111" width="800" height="800"/%3E%3C/svg%3E`;

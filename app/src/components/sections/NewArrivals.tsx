@@ -6,6 +6,7 @@ import { useNewArrivals } from '@/hooks';
 import { formatPrice } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
 import { ProductSkeleton } from '@/components/ui/ProductSkeleton';
+import { optimizedImage } from '@/data/image-variants';
 
 /**
  * NewArrivals — "New Range of products, just arrived!" row.
@@ -69,9 +70,12 @@ export function NewArrivals() {
                   >
                     <div className="relative aspect-[4/5] overflow-hidden bg-white/[0.02]">
                       <img
-                        src={product.image}
+                        src={optimizedImage(product.image)}
                         alt={product.name}
+                        width={400}
+                        height={500}
                         loading="lazy"
+                        decoding="async"
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                         onError={(e) => {
                           (e.target as HTMLImageElement).src = `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"%3E%3Crect fill="%23111" width="400" height="500"/%3E%3C/svg%3E`;

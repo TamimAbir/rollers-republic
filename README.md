@@ -3,7 +3,7 @@
 [![CI](https://github.com/TamimAbir/rollers-republic/actions/workflows/ci.yml/badge.svg)](https://github.com/TamimAbir/rollers-republic/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![Stack](https://img.shields.io/badge/React%2019%20·%20TS%20strict%20·%20Vite%207-2b2b2b?logo=react)](docs/ARCHITECTURE.md)
-[![Tests](https://img.shields.io/badge/tests-174%20passing-2ECC71)](#quality-gates)
+[![Tests](https://img.shields.io/badge/tests-205%20passing-2ECC71)](#quality-gates)
 [![A11y](https://img.shields.io/badge/WCAG%202.1%20AA%20·%20axe%20clean-D4AF37)](#quality-gates)
 [![Live](https://img.shields.io/badge/live-rollers--republic.vercel.app-black?logo=vercel)](https://rollers-republic.vercel.app)
 
@@ -18,7 +18,7 @@ vapes and munchies — imported from the UK with same-day Dhaka delivery.
 
 ## Highlights
 
-- **Real catalog, not lorem ipsum** — 949 products / 82 brands / 8 categories snapshotted
+- **Real catalog, not lorem ipsum** — 949 products / 83 brands / 8 categories snapshotted
   from the client's live WooCommerce Store API into `server/seed.json`, the single
   source of truth; the client's typed fallback dataset is derived from it at build time
 - **Static-prerendered at build** — all 484 indexable routes (477 in-stock PDPs + key
@@ -55,14 +55,14 @@ No env files needed — the app serves the bundled seed catalog out of the box.
 ```bash
 cd app
 npm run lint            # zero errors
-npm test -- --run       # 120 unit tests
+npm test -- --run       # 144 unit tests
 npm run test:coverage   # thresholds: 84/75/80/84 (stmts/branch/funcs/lines)
 npm run build           # tsc + vite + 484-route prerender (~3 min)
 npm run test:e2e        # Playwright storeflow + axe-core a11y (24 specs)
 npm run test:e2e:degraded
 
 cd ../server
-npm test                # 28 API integration tests — zero dependencies, no install needed
+npm test                # 37 API integration tests — zero dependencies, no install needed
 cd .. && npm run catalog:check # catalog.ts derives from server/seed.json (SSOT gate)
 ```
 

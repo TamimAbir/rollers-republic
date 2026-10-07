@@ -5,6 +5,7 @@ import { ArrowUpRight, Sparkles } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCategories } from '@/hooks';
 import { Badge } from '@/components/ui/badge';
+import { optimizedImage } from '@/data/image-variants';
 
 export function Categories() {
   const sectionRef = useRef<HTMLDivElement>(null);
@@ -76,9 +77,12 @@ SHOP <span className="text-white/30 italic">BY</span> <span className="text-prim
                   <div className={cn('absolute inset-0 bg-gradient-to-br', category.gradient ?? 'from-amber-500 to-orange-600')} />
                   {category.image && (
                     <img
-                      src={category.image}
+                      src={optimizedImage(category.image)}
                       alt=""
+                      width={400}
+                      height={500}
                       loading="lazy"
+                      decoding="async"
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105"
                     />
                   )}

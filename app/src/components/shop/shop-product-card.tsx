@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { formatPrice, cn } from '@/lib/utils';
 import type { ProductCard } from '@/lib/api';
+import { optimizedImage } from '@/data/image-variants';
 
 interface ShopProductCardProps {
   product: ProductCard;
@@ -32,8 +33,12 @@ export function ShopProductCard({ product, index, onAddToCart }: ShopProductCard
         >
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent z-10" />
           <img
-            src={product.image}
+            src={optimizedImage(product.image)}
             alt={product.name}
+            width={400}
+            height={500}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
             onError={(e) => {
               (e.target as HTMLImageElement).src = `data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="500" viewBox="0 0 400 500"%3E%3Crect fill="%23111" width="400" height="500"/%3E%3C/svg%3E`;
