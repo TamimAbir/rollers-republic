@@ -53,3 +53,36 @@ export function optimizedImage(src: string | undefined | null): string | undefin
   if (!src) return undefined;
   return LOOKUP[src] ?? src;
 }
+
+/** A width ladder for one large above-the-fold image. */
+export interface ResponsiveImage {
+  readonly name: string;
+  /** Original file, used as the <img> src fallback. */
+  readonly fallback: string;
+  /** Pre-comma "url width" list for the img/srcset attribute. */
+  readonly srcset: string;
+  /** The sizes attribute that tells the browser which width it needs. */
+  readonly sizes: string;
+}
+
+/**
+ * Responsive ladders keyed by the original filename. 1 asset(s).
+ * The hero is the LCP element; serving it a correctly sized variant is what
+ * moves mobile LCP, not recompressing the full-resolution file.
+ */
+export const RESPONSIVE_IMAGES: Record<string, ResponsiveImage> = {
+  'hero-product.jpg': {
+    name: 'hero-product',
+    fallback: '/images/hero-product.jpg',
+    srcset: '/images/hero-product-320.webp 320w, /images/hero-product-480.webp 480w, /images/hero-product-640.webp 640w, /images/hero-product-768.webp 768w, /images/hero-product-1024.webp 1024w',
+    sizes: '(min-width: 1024px) 32rem, (min-width: 768px) 45vw, 92vw',
+  },
+};
+
+/** Responsive ladder for a filename, if one was generated. */
+export function responsiveImage(file: string | undefined | null): ResponsiveImage | undefined {
+  if (!file) return undefined;
+  const name = file.split('/').pop();
+  if (!name) return undefined;
+  return RESPONSIVE_IMAGES[name];
+}

@@ -16,7 +16,11 @@
  *      module, mirroring how `catalog.ts` derives from `seed.json`. The UI
  *      imports that and asks for an optimized URL; anything absent from the map
  *      falls through to the original file. Generated, never hand-edited.
- *   4. `--report` prints what would change and writes nothing (dry run).
+ *   4. Builds a responsive width ladder for the hero (and any other asset named
+ *      in RESPONSIVE) so the browser can fetch a correctly sized file instead of
+ *      the full-resolution one. The hero was measured at 476KB and is the LCP
+ *      element on every page view.
+ *   5. `--report` prints what would change and writes nothing (dry run).
  *
  * WebP gets universal support (all evergreen browsers, iOS 14+), so serving it
  * alongside the original is safe; the originals stay on disk as the fallback for
@@ -44,6 +48,27 @@ const reportOnly = process.argv.includes('--report');
 
 const RASTER = new Set(['.png', '.jpg', '.jpeg']);
 const KB = 1024;
+
+/**
+ * Assets that get a responsive width ladder in addition to the flat WebP
+ * conversion. The hero is the LCP element on every page: measured at 476KB and
+ * 1024x1536, but rendered into roughly half the viewport on desktop and about
+ * 90% of it on mobile — so most of that weight was never displayed.
+ *
+ * `sizes` must match the rendered CSS box at each breakpoint (see the `sizes`
+ * attribute written into Hero.tsx). Widths are the intrinsic pixel widths the
+ * browser chooses between.
+ */
+const RESPONSIVE = [
+  {
+    name: 'hero-product',
+    dir: join(ROOT, 'public/images'),
+    source: 'hero-product.jpg',
+    widths: [320, 480, 640, 768, 1024],
+    // w-full inside a max-w-lg column on desktop; ~92vw on mobile.
+    sizes: '(min-width: 1024px) 32rem, (min-width: 768px) 45vw, 92vw',
+  },
+];
 
 // Resolve a libwebp-capable ffmpeg once: PATH first, then the copies Playwright
 // and Hermes already vendor.
@@ -84,6 +109,41 @@ function convert(src, dest) {
     ['-y', '-loglevel', 'error', '-i', src, '-c:v', 'libwebp', '-quality', String(QUALITY), dest],
     { stdio: 'pipe' },
   );
+}
+
+/** Scale `src` to an exact pixel width and encode as WebP. */
+function convertWidth(src, dest, width) {
+  execFileSync(
+    FFMPEG,
+    [
+      '-y', '-loglevel', 'error',
+      '-i', src,
+      '-vf', `scale=${width}:-2`, // -2 keeps aspect, forces even dimensions
+      '-c:v', 'libwebp', '-quality', String(QUALITY),
+      dest,
+    ],
+    { stdio: 'pipe' },
+  );
+}
+
+/**
+ * Intrinsic pixel width of an image. Parsed from ffmpeg's stderr banner rather
+ * than ffprobe: ffmpeg is the binary we resolve, and ffprobe is not guaranteed to
+ * sit beside it (Playwright's bundled copy has no ffprobe). ffmpeg exits
+ * non-zero when given no output file, so the failure is expected here and the
+ * message still carries the stream dimensions.
+ */
+function intrinsicWidth(file) {
+  let stderr = '';
+  try {
+    execFileSync(FFMPEG, ['-hide_banner', '-i', file], { stdio: ['ignore', 'ignore', 'pipe'] });
+  } catch (error) {
+    stderr = String(error.stderr ?? '');
+  }
+  // e.g. "Stream #0:0: Video: webp, yuv420p(progressive), 1024x1536, ..."
+  const match = stderr.match(/Video:.*?,\s*(\d{2,5})x(\d{2,5})/);
+  if (!match) throw new Error(`could not read intrinsic size of ${file}`);
+  return Number(match[1]);
 }
 
 function walk(dir) {
@@ -151,8 +211,66 @@ if (reportOnly) {
   console.log(
     `\n${heavy.length} files ≥ ${MIN_BYTES / KB}KB, ${(totalHeavy / 1024 / 1024).toFixed(1)}MB total.`,
   );
+  for (const spec of RESPONSIVE) {
+    const src = join(spec.dir, spec.source);
+    if (!existsSync(src)) {
+      console.log(`  responsive: ${spec.name} — source missing, skipped`);
+      continue;
+    }
+    console.log(`  responsive: ${spec.name} would emit ${spec.widths.length} widths`);
+  }
   console.log('Dry run — nothing written.');
   process.exit(0);
+}
+
+// ---------------------------------------------------------------------------
+// Responsive width ladders. Runs before the manifest is written so the typed
+// module can carry the ladder data the UI needs to build a srcset.
+// ---------------------------------------------------------------------------
+const responsive = [];
+for (const spec of RESPONSIVE) {
+  const src = join(spec.dir, spec.source);
+  if (!existsSync(src)) {
+    console.warn(`  ! responsive: ${spec.name} — no source at ${relative(ROOT, src)}, skipped`);
+    continue;
+  }
+  const native = intrinsicWidth(src);
+  const widths = spec.widths.filter((w) => w <= native);
+  if (!widths.length) {
+    console.warn(`  ! responsive: ${spec.name} — no width ≤ native ${native}px, skipped`);
+    continue;
+  }
+  const sources = [];
+  for (const width of widths) {
+    const dest = join(spec.dir, `${spec.name}-${width}.webp`);
+    if (!existsSync(dest) || statSync(dest).size === 0) {
+      if (reportOnly) continue;
+      convertWidth(src, dest, width);
+    }
+    sources.push({
+      width,
+      src: `/${relative(join(ROOT, 'public'), dest)}`,
+      bytes: statSync(dest).size,
+    });
+  }
+  if (!sources.length) continue;
+  const smallest = sources[0];
+  const flat = join(spec.dir, `${spec.name}.webp`);
+  const flatBytes = existsSync(flat) ? statSync(flat).size : null;
+  responsive.push({
+    name: spec.name,
+    fallback: `/${relative(join(ROOT, 'public'), join(spec.dir, spec.source))}`,
+    srcset: sources.map((s) => `${s.src} ${s.width}w`).join(', '),
+    sizes: spec.sizes,
+    sources,
+    native,
+    flatBytes,
+  });
+  console.log(
+    `  responsive ${spec.name}: ${sources.length} widths ` +
+      `(${sources.map((s) => `${s.width}w=${(s.bytes / KB).toFixed(0)}KB`).join(' ')})` +
+      `${flatBytes ? ` vs flat ${(flatBytes / KB).toFixed(0)}KB` : ''}`,
+  );
 }
 
 manifest.generated = new Date().toISOString();
@@ -200,6 +318,44 @@ export function optimizedImage(src: string | undefined | null): string | undefin
   if (!src) return undefined;
   return LOOKUP[src] ?? src;
 }
+
+/** A width ladder for one large above-the-fold image. */
+export interface ResponsiveImage {
+  readonly name: string;
+  /** Original file, used as the <img> src fallback. */
+  readonly fallback: string;
+  /** Pre-comma "url width" list for the img/srcset attribute. */
+  readonly srcset: string;
+  /** The sizes attribute that tells the browser which width it needs. */
+  readonly sizes: string;
+}
+
+/**
+ * Responsive ladders keyed by the original filename. ${responsive.length} asset(s).
+ * The hero is the LCP element; serving it a correctly sized variant is what
+ * moves mobile LCP, not recompressing the full-resolution file.
+ */
+export const RESPONSIVE_IMAGES: Record<string, ResponsiveImage> = {
+${responsive
+  .map(
+    (r) =>
+      `  '${r.name}.jpg': {\n` +
+      `    name: '${r.name}',\n` +
+      `    fallback: '${r.fallback}',\n` +
+      `    srcset: '${r.srcset}',\n` +
+      `    sizes: '${r.sizes}',\n` +
+      `  },`,
+  )
+  .join('\n')}
+};
+
+/** Responsive ladder for a filename, if one was generated. */
+export function responsiveImage(file: string | undefined | null): ResponsiveImage | undefined {
+  if (!file) return undefined;
+  const name = file.split('/').pop();
+  if (!name) return undefined;
+  return RESPONSIVE_IMAGES[name];
+}
 `;
 writeFileSync(modulePath, module);
 
@@ -207,7 +363,8 @@ console.log(
   `\n✅ ${entries.length} webp variants · ` +
     `${(before / 1024 / 1024).toFixed(1)}MB → ${(after / 1024 / 1024).toFixed(1)}MB of served imagery` +
     `${skipped ? ` · ${skipped} under threshold left alone` : ''}` +
-    `${missing ? ` · ${missing} failed` : ''}`,
+    `${missing ? ` · ${missing} failed` : ''}` +
+    `${responsive.length ? ` · ${responsive.length} responsive ladder(s)` : ''}`,
 );
 console.log(`   manifest: ${relative(ROOT, manifestPath)}`);
 console.log(`   module:   ${relative(ROOT, modulePath)}`);
