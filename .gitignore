@@ -55,4 +55,11 @@ test-results/
 
 # Generated pitch deck (rebuild with: node docs/scripts/build-pitch.mjs)
 docs/pitch.html
-\n# Product imagery: WebP variants + manifest are build artifacts of\n# `npm run optimize:images` (ffmpeg/libwebp). The originals in\n# public/images are the source of truth and stay tracked.\napp/public/images/products/*.webp\napp/public/images/products/image-manifest.json\napp/src/data/image-variants.ts\n
+
+# Derived lookup for product imagery (written by `npm run optimize:images`).
+# The .webp variants themselves ARE tracked: Vercel's build image has no ffmpeg,
+# so a fresh deploy cannot regenerate them and would silently fall back to the
+# 14MB originals. Regenerate locally after changing public/images, then commit
+# both the variants and this lookup.
+app/public/images/products/image-manifest.json
+app/src/data/image-variants.ts
