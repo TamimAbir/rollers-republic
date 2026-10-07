@@ -118,7 +118,7 @@ export const siteConfig: SiteConfig = {
   ],
   email: 'hello@rollerspub.com',
   phone: '01330005300',
-  phoneAlt: '01711626210',
+  phoneAlt: '01711626205',
   address: 'Plaza A.R, Dhanmondi-28, Ground floor, Shop 108, Dhaka 1207',
   outlets: [
     {

@@ -86,7 +86,7 @@ Pre-render `/`, `/shop`, `/about`, `/contact` and all `/product/*` pages to stat
 **✅ Shipped 2026-09-23** — `app/scripts/prerender.mjs` (zero new deps: Playwright + the reference API server) renders **484 routes** — every sitemap pathname (home, shop, about, contact, legal, all 477 in-stock PDPs) — into `dist/**/index.html` at build time. `npm run build` chains it; `SKIP_PRERENDER=1` opts out; on Vercel it soft-skips if chromium can't launch so deploys never break. Page weight fell **606 KB → 155 KB** (home) after killing duplicate CSS injection (`cssCodeSplit: false` + a prerender dedupe pass; dist 247 MB → 54 MB). Verified per page: real `<title>`, Product + Store JSON-LD, populated `#root`, no AgeGate in saved HTML.
 
 ### 5. LocalBusiness structured data *(effort: ~30min · impact: map-pack & rich results)*
-Add `LocalBusiness`/`Store` JSON-LD (both outlets, `01330005300` / `01711626210`, opening hours, `sameAs` Facebook, `foundingDate: 2013`) sitewide via the existing `seo.tsx` injector. Cheap, and it powers "smoking headshop near Dhanmondi" rich results — a strong moment in the demo when you show Google's view.
+Add `LocalBusiness`/`Store` JSON-LD (both outlets, `01330005300` / `01711626205`, opening hours, `sameAs` Facebook, `foundingDate: 2013`) sitewide via the existing `seo.tsx` injector. Cheap, and it powers "smoking headshop near Dhanmondi" rich results — a strong moment in the demo when you show Google's view.
 
 ---
 

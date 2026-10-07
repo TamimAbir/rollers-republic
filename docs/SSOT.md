@@ -44,9 +44,9 @@ future agent needs a NEW business fact, it must be verified the same way — nev
 | Tagline in use | "Smoking Headshop — Imported from UK" |
 | Founded | **2013** ("pioneered the headshop concept in the region") |
 | Positioning | Bangladesh-based online smoke shop; 100% authentic, imported quality; community/"brotherhood" brand voice |
-| Outlets | **Plaza A.R, Dhanmondi-28, Ground floor, Shop 108, Dhaka 1207** · **Mirpur** outlet (second location) |
+| Outlets | **Dhanmondi flagship** — Plaza A.R, Dhanmondi-28, Ground floor, Shop 108, Dhaka 1207 (verified on their contact page 2026-10-06). **Second outlet: UNCONFIRMED** — their Instagram says Basundhara, a Facebook post says Mirpur. Do not name it in copy or structured data until the client confirms. |
 | Pickup | Free pickup at Dhanmondi 2/A |
-| Phones | **01330005300** (express delivery line, shown site-wide) · **01711626210** |
+| Phones | **01330005300** (express delivery line, shown site-wide) · **01711626205** (official site, verified 2026-10-06; config previously had a wrong final digit) |
 | Social | https://www.facebook.com/RollersRepublic (very active; bilingual EN/BN posts, product price posts) |
 | Sales model | Order online → call for express delivery; same-day delivery in Dhaka; bKash + cash-on-delivery friendly |
 | Mascot | **"Bro Bear"** — "Best Sellers and Bro Bear Recommended" |
