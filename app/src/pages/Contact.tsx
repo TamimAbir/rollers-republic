@@ -34,11 +34,11 @@ const contactInfo = [
 
 export function Contact() {
   useDocumentSEO({
-    title: 'Contact & Outlets · Dhanmondi + Mirpur, Dhaka',
+    title: 'Contact & Outlets · Dhanmondi, Dhaka',
     description:
-      'Visit the Dhanmondi flagship (Plaza A.R, Shop 108) or Mirpur outlet, call 01330005300, or message us on WhatsApp. Open 7 days for same-day delivery across Dhaka.',
+      'Visit the Dhanmondi flagship (Plaza A.R, Shop 108), call 01330005300, or message us on WhatsApp. Open 7 days for same-day delivery across Dhaka.',
     canonicalPath: '/contact',
-    keywords: 'rollers republic contact, headshop dhanmondi address, smoke shop mirpur, 01330005300, whatsapp order bangladesh',
+    keywords: 'rollers republic contact, headshop dhanmondi address, 01330005300, whatsapp order bangladesh',
   });
 
   const [formData, setFormData] = useState({

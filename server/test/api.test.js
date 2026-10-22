@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { request as httpRequest } from 'node:http';
 
 /**
- * Integration tests for the RollON Reference API.
+ * Integration tests for the Rollers Republic Reference API.
  * Boots the real server on an ephemeral port and exercises the contract.
  */
 

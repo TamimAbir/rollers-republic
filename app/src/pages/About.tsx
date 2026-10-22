@@ -5,7 +5,7 @@ import { useDocumentSEO } from '@/lib/seo';
 
 const stats = [
   { icon: Award, value: '2013', label: 'Established in Dhaka' },
-  { icon: Store, value: '2', label: 'Outlets — Dhanmondi & Mirpur' },
+  { icon: Store, value: '1', label: 'Dhanmondi Flagship' },
   { icon: ShieldCheck, value: '100%', label: 'Authentic, Imported from UK' },
   { icon: MapPin, value: 'Same-Day', label: 'Delivery Across Dhaka' },
 ];
@@ -39,7 +39,7 @@ export function About() {
     description:
       'From a single shop in Dhanmondi to Bangladesh\u2019s most trusted headshop. Two outlets, 82 imported brands, one standard: 100% authentic, every time.',
     canonicalPath: '/about',
-    keywords: 'rollers republic story, headshop dhaka history, dhanmondi smoke shop, mirpur headshop, about rollers republic',
+    keywords: 'rollers republic story, headshop dhaka history, dhanmondi smoke shop, about rollers republic',
   });
 
   return (

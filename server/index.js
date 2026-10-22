@@ -1,5 +1,5 @@
 /**
- * RollON Reference API Server
+ * Rollers Republic Reference API Server
  *
  * Zero-dependency Node HTTP server implementing the API contract in docs/API.md.
  * This is the reference backend for the template — swap it for Supabase,
@@ -469,7 +469,7 @@ function createAppServer({ seed: seedOverride } = {}) {
   }
   return createServer((req, res) => {
     handleRequest(req, res).catch((err) => {
-      console.error('[RollON API] Unhandled error:', err);
+      console.error('[Rollers Republic API] Unhandled error:', err);
       if (!res.headersSent) sendError(res, 500, 'Internal server error', 'INTERNAL');
     });
   });
@@ -490,7 +490,7 @@ const isMain = (() => {
 if (isMain) {
   const server = createAppServer();
   server.listen(PORT, () => {
-    console.log(`RollON Reference API listening on http://localhost:${PORT}`);
+    console.log(`Rollers Republic Reference API listening on http://localhost:${PORT}`);
     console.log(`  ${db.products.length} products, ${db.categories.length} categories, ${db.orders.length} orders`);
   });
 }

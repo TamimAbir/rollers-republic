@@ -126,11 +126,6 @@ export const siteConfig: SiteConfig = {
       address: 'Plaza A.R, Dhanmondi-28, Ground floor, Shop 108, Dhaka 1207',
       mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Plaza+AR+Dhanmondi+28+Dhaka',
     },
-    {
-      name: 'Mirpur Outlet',
-      address: 'Mirpur, Dhaka (call for directions)',
-      mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Rollers+Republic+Mirpur+Dhaka',
-    },
   ],
   social: {
     facebook: 'https://www.facebook.com/RollersRepublic',

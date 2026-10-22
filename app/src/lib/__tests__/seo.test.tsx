@@ -97,9 +97,10 @@ describe('buildLocalBusinessJsonLd', () => {
       addressLocality: 'Dhaka',
       addressCountry: 'BD',
     });
-    // Both physical outlets are advertised as separate Places.
+    // Physical outlets are advertised as separate Places; only the head
+    // outlet is currently listed in siteConfig.outlets.
     expect(Array.isArray(ld.location)).toBe(true);
-    expect((ld.location as unknown[]).length).toBeGreaterThanOrEqual(2);
+    expect((ld.location as unknown[]).length).toBeGreaterThanOrEqual(1);
   });
 
   it('advertises both phone numbers via contactPoint', () => {
