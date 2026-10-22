@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="560" viewBox="0 0 800 560">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#D4AF37" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#F59E0B" stop-opacity="0.5"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.45" r="0.6">
+      <stop offset="0" stop-color="#D4AF37" stop-opacity="0.25"/>
+      <stop offset="1" stop-color="#D4AF37" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="560" fill="#0A0A0A"/>
+  <circle cx="400" cy="250" r="320" fill="url(#glow)"/>
+
+  <!-- Bong silhouette -->
+  <g stroke="url(#glass)" stroke-width="6" fill="none" stroke-linecap="round">
+    <path d="M 330 130 C 330 130 330 240 330 280 C 330 330 260 340 260 410 C 260 470 320 500 400 500 C 480 500 540 470 540 410 C 540 340 470 330 470 280 C 470 240 470 130 470 130"/>
+  </g>
+  <!-- Downstem & bowl -->
+  <g stroke="#D4AF37" stroke-width="5" fill="none" stroke-linecap="round">
+    <path d="M 400 280 L 400 380"/>
+    <ellipse cx="400" cy="268" rx="26" ry="12"/>
+  </g>
+  <!-- Water line -->
+  <path d="M 292 420 C 330 408 470 408 508 420" stroke="#F59E0B" stroke-width="4" opacity="0.7" fill="none" stroke-linecap="round"/>
+
+  <!-- Rolling paper pack -->
+  <g transform="translate(560 300) rotate(8)">
+    <rect x="0" y="0" width="110" height="150" rx="12" fill="none" stroke="#D4AF37" stroke-width="4"/>
+    <line x1="22" y1="34" x2="88" y2="34" stroke="#D4AF37" stroke-width="4" stroke-linecap="round"/>
+    <line x1="22" y1="58" x2="88" y2="58" stroke="#D4AF37" stroke-width="4" stroke-linecap="round" opacity="0.7"/>
+    <line x1="22" y1="82" x2="88" y2="82" stroke="#D4AF37" stroke-width="4" stroke-linecap="round" opacity="0.4"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="72" y="88" font-family="Arial Black, Arial, sans-serif" font-size="44" font-weight="900" fill="#FFFFFF" letter-spacing="-1">ROLLERS</text>
+  <text x="72" y="132" font-family="Arial Black, Arial, sans-serif" font-size="44" font-weight="900" fill="#D4AF37" letter-spacing="-1">REPUBLIC</text>
+  <text x="74" y="164" font-family="Arial, sans-serif" font-size="15" font-weight="bold" fill="#FFFFFF" opacity="0.6" letter-spacing="5">EST. 2013 · DHAKA · IMPORTED FROM UK</text>
+</svg>
