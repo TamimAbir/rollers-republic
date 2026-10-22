@@ -1,0 +1,26 @@
+# CODEOWNERS
+# These owners will be automatically requested for review when someone opens a PR.
+
+# Global owners
+* @TamimAbir
+
+# Frontend (React storefront)
+/app/ @TamimAbir
+
+# Reference API (zero-dep Node)
+/server/ @TamimAbir
+
+# Vercel serverless functions
+/api/ @TamimAbir
+
+# Documentation
+/docs/ @TamimAbir
+
+# CI/CD workflows
+/.github/workflows/ @TamimAbir
+
+# Configuration files
+/vercel.json @TamimAbir
+/app/tailwind.config.js @TamimAbir
+/app/tsconfig.json @TamimAbir
+/app/vite.config.ts @TamimAbir

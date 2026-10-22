@@ -36,6 +36,22 @@ All notable changes to this project are documented here. Format based on
   inline styles. Eliminates ~450 KB of duplicated toast/vendor CSS that the
   prerender captured on every page (home 606 KB → 155 KB; dist 247 MB → 54 MB).
 
+## [1.0.1] — 2026-10-07
+
+### Performance
+- **Responsive hero ladder** — 477 KB LCP image replaced by 11–77 KB WebP variants across breakpoints (mobile/tablet/desktop), cutting hero payload by ~90%
+- **WebP product imagery** — full catalog converted (14.2 MB → 1.5 MB total); mobile LCP 10.7s → 7.7s
+- **Image variant lookup** — generated at build (`image-variants.ts`), tracked in git (untracking breaks clean deploys)
+
+### Documentation
+- **Pitch corrections** — four unsupported claims removed from sales one-pager; Lighthouse re-run
+- **Contact accuracy** — Dhanmondi phone digit corrected; second outlet flagged as unconfirmed
+- **Scorecard finalization** — test counts, screenshots, and metrics for the pitch
+
+### Build Reliability
+- **Vercel artifact tracking** — WebP variants and generated lookup modules now tracked (gitignoring broke clean deploys at `tsc` step)
+- **Catalog drift gate** — CI enforces `src/data/catalog.ts` derives from `server/seed.json`
+
 ## [1.0.0] — 2026-09-20
 
 First release of the **Rollers Republic** storefront, built on the RollON template
