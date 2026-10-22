@@ -50,6 +50,14 @@ npm run dev            # http://localhost:5173
 
 No env files needed — the app serves the bundled seed catalog out of the box.
 
+## Audit & status
+
+- **Target state: 9.7/10** — full command-verified audit in [`docs/AUDIT.md`](docs/AUDIT.md).
+- **Live Lighthouse:** perf 0.89 · accessibility 1.0 · best-practices 1.0 · SEO 1.0 → ≈97/100.
+- **Codes:** 159/159 unit · 24/24 E2E · 2/2 degraded · 37/37 server · lint 0 errors · tsc clean · build 484/484 routes prerendered.
+- **Branding:** removed the unconfirmed Mirpur outlet; renamed RollON template references → Rollers Republic.
+- **Open (P2):** `SKIP_PRERENDER` deploy doc, AgeGate focus trap, CI deploy job + `timeout-minutes`, `gh` branch protection on `main`.
+
 ## Quality gates (Definition of Done — SSOT §10)
 
 ```bash

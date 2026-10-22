@@ -52,6 +52,16 @@ All notable changes to this project are documented here. Format based on
 - **Vercel artifact tracking** — WebP variants and generated lookup modules now tracked (gitignoring broke clean deploys at `tsc` step)
 - **Catalog drift gate** — CI enforces `src/data/catalog.ts` derives from `server/seed.json`
 
+### Changed
+- **Positioning/brand cleanup (audit findings 1–2):** removed the unconfirmed second
+  outlet (Mirpur) from `config.ts`, `Contact.tsx`, `About.tsx`, and the build-time
+  LocalBusiness JSON-LD; renamed RollON template references → "Rollers Republic
+  Reference API Server" in `server/index.js` + test suite; fixed `app/package.json`
+  homepage to the project URL.
+- **Command-verified audit:** added `docs/AUDIT.md` (full command-verified audit with
+  provenance); updated `README.md` audit status; reflected milestone statuses in
+  `docs/SSOT.md`.
+
 ## [1.0.0] — 2026-09-20
 
 First release of the **Rollers Republic** storefront, built on the RollON template
